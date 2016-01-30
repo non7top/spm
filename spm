@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source local.env
+_basedir=$HOME/local
+_recdir=./recipes
+
+__conf_dir=${_basedir}/.spm/
+__tmp=$(mktemp -d)
+
+mkdir -p ${_basedir} ${__conf_dir}
+
+action=$1
+
+
+list_available() {
+    ls -1 ${_recdir}
+}
+
+install() {
+    pkg=$1
+    source ${_recdir}/$pkg
+    echo "Installing $pkg"
+    _build
+    _list
+}
+
+case $action in
+    list_available)     list_available ;;
+    list_installed)     list_installed ;;
+    install)            install $2 ;;
+    *)                  echo "Unknown action: $a"; exit 1; ;;
+esac
