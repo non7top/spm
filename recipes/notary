@@ -1,0 +1,18 @@
+#!/bin/bash
+pkg=notary
+ver="${ver:-git}"
+rel=1
+grp=base
+dep=(cherrypy M2Crypto sqlalchemy argparse pysqlite)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    cd 
+    git clone https://github.com/danwent/Perspectives-Server.git
+    chmod +x Perspectives-Server/*.sh
+}
+
+_list() {
+    hash -r
+}

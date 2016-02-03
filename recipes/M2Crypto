@@ -1,0 +1,24 @@
+#!/bin/bash
+pkg=M2Crypto
+ver="${ver:-0.22.5}"
+rel=1
+grp=base
+dep=(swig pip)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+#    curl -O https://pypi.python.org/packages/source/M/M2Crypto/M2Crypto-${ver}.tar.gz
+ #   tar xzf $pkg-${ver}.tar.gz
+  #  cd $pkg-${ver}
+    export SWIG_FEATURES="-cpperraswarn -includeall -I$PREFIX/include/"
+    pip install $pkg
+    #    python setup.py build_ext --include-dirs=$PREFIX/include/ --swig=$PREFIX/bin/swig --openssl=$PREFIX/
+    #python setup.py install --prefix=$PREFIX
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    echo ">>>> $pkg: $( pip show $pkg|grep ^Version )"
+}
