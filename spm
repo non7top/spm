@@ -5,6 +5,7 @@ _basedir=$HOME/local
 _recdir=./recipes
 
 __conf_dir=${_basedir}/.spm/
+_list=${__conf_dir}/list
 __tmp=$(mktemp -d)
 
 mkdir -p ${_basedir} ${__conf_dir}
@@ -16,16 +17,62 @@ list_available() {
     ls -1 ${_recdir}
 }
 
+_record_installed() {
+    local _pkg=$1
+    local _ver=$2
+    cat ${_list} 2> /dev/null | awk -v pkg=$_pkg '$1 == pkg { next};1' > ${_list}.new
+    echo "$_pkg $_ver" >> ${_list}.new
+    mv ${_list}.new ${_list}
+}
+
+_is_installed() {
+    local _pkg1=$1
+    local _ver1=$2
+    test -f ${_list} || return 1
+    while read line; do
+        local _pkg2=$( echo "$line" | awk '{print $1}' )
+        local _ver2=$( echo "$line" | awk '{print $2}' )
+        e=1
+        if [ "$_pkg1" = "$_pkg2" ]; then
+            e=2
+        fi
+        if [ "${_pkg1}" = "${_pkg2}" -a "$_ver1" = "$_ver2" ]; then
+            e=0
+            return $e
+        fi
+    done < ${_list}
+    return $e
+}
+
 install() {
-    pkg=$1
-    source ${_recdir}/$pkg
-    echo "Installing $pkg"
-    _build
+    local _pkg=$1
+    if [ ! -f ${_recdir}/$_pkg ]; then
+        echo "Recipe for package $_pkg not found"
+        exit 1
+    fi
+
+    unset pkg ver rel grp mkd bak opt src sha
+    source ${_recdir}/$_pkg
+        ( 
+        unset pkg ver rel grp mkd bak opt src sha
+        for i in ${dep[@]}; do
+            install $i
+        done
+        )
+    if ! _is_installed  $pkg $ver; then
+        echo "Installing $pkg"
+        _d=$PWD
+        cd ${__tmp}
+        _build #> build.log-$pkg
+        cd $_d
+    fi
+    hash -r
     _list
+    _record_installed $pkg $ver
 }
 
 case $action in
-    list_available)     list_available ;;
+    list_available|list)     list_available ;;
     list_installed)     list_installed ;;
     install)            install $2 ;;
     *)                  echo "Unknown action: $a"; exit 1; ;;
