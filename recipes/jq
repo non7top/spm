@@ -1,0 +1,23 @@
+#!/bin/bash
+pkg=jq
+ver="${ver:-1.5}"
+rel=1
+grp=base
+dep=()
+src=(https://github.com/stedolan/jq/releases/download/jq-${ver}/jq-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O https://github.com/stedolan/jq/releases/download/jq-${ver}/jq-${ver}.tar.gz
+    tar xzf ${pkg}-${ver}.tar.gz
+    cd ${pkg}-${ver}
+    autoreconf -i
+    ./configure --silent --prefix=$PREFIX --disable-maintainer-mode
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    jq --version
+}
