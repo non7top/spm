@@ -8,7 +8,7 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L --cacert $PREFIX/ca-bundle.crt https://curl.haxx.se/download/${pkg}-${ver}.tar.gz
+    curl --insecure -O -L --cacert $PREFIX/ca-bundle.crt https://curl.haxx.se/download/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX --with-ca-bundle=$PREFIX/ca-bundle.crt --with-ssl --with-zlib --with-libidn
