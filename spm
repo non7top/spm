@@ -2,7 +2,7 @@
 
 source local.env
 _basedir=$HOME/local
-_recdir=./recipes
+_recdir=$( readlink -f ./recipes )
 
 __conf_dir=${_basedir}/.spm/
 _list=${__conf_dir}/list
@@ -56,9 +56,13 @@ install() {
         ( 
         unset pkg ver rel grp mkd bak opt src sha
         for i in ${dep[@]}; do
-            install $i
+            install $i || exit 1
         done
         )
+        res=$?
+        if [ $res -ne 0 ]; then
+            exit 1
+        fi
     if ! _is_installed  $pkg $ver; then
         echo "Installing $pkg"
         _d=$PWD
@@ -66,10 +70,16 @@ install() {
         _build #> build.log-$pkg
         res=$?
         cd $_d
+          if [ $res -ne 0 ]; then
+            echo "Building $pkg $ver failed"
+            echo "Temp dir is ${__tmp}"
+            exit 1
+          fi
+
     fi
     hash -r
     _list
-    [ "$res" -eq 0 ] && _record_installed $pkg $ver
+    _record_installed $pkg $ver
 }
 
 case $action in
