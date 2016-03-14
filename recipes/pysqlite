@@ -1,0 +1,19 @@
+#!/bin/bash
+pkg=pysqlite
+ver="${ver:-3090000}"
+rel=1
+grp=base
+dep=(python2 sqlite3)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    pip install $pkg
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    echo ">>>> $pkg: $( pip show $pkg|grep ^Version )"
+    python -c "from pysqlite2 import dbapi2 as _ ; print (_.__file__,_.sqlite_version,_.sqlite_version_info,_.version,_.version_info) "
+}
