@@ -64,11 +64,12 @@ install() {
         _d=$PWD
         cd ${__tmp}
         _build #> build.log-$pkg
+        res=$?
         cd $_d
     fi
     hash -r
     _list
-    _record_installed $pkg $ver
+    [ "$res" -eq 0 ] && _record_installed $pkg $ver
 }
 
 case $action in
