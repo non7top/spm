@@ -1,0 +1,25 @@
+#!/bin/bash
+pkg=dnscrypt-wrapper
+ver="${ver:-master}"
+rel=1
+grp=base
+dep=(libevent)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -O -L --cacert $PREFIX/ca-bundle.crt https://github.com/Cofyc/dnscrypt-wrapper/archive/master.tar.gz
+    tar xzf master.tar.gz
+    cd ${pkg}-${ver}
+    make configure
+    #PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX
+    #make -s install
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX --sbindir=$PREFIX/bin
+    make sbindir=${PREFIX}/bin install
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    ${pkg} -v
+}

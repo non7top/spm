@@ -1,0 +1,24 @@
+#!/bin/bash
+pkg=libsodium
+ver="${ver:-1.0.8}"
+rel=1
+grp=base
+dep=(ca-bundle)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    # their site has broken cert chain
+    curl -O -L -k --cacert $PREFIX/ca-bundle.crt https://download.libsodium.org/libsodium/releases/${pkg}-${ver}.tar.gz
+    tar xzf ${pkg}-${ver}.tar.gz
+    cd ${pkg}-${ver}
+
+    ./configure --silent --prefix=$PREFIX --enable-shared
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg
+}
