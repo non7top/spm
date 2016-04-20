@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=ocserv
-ver="${ver:-0.10.9}"
+ver="${ver:-0.10.12}"
 rel=1
 grp=base
 dep=(nettle libnl gnutls readline)
