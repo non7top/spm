@@ -1,0 +1,24 @@
+#!/bin/bash
+pkg=gnulib
+ver="${ver:-master}"
+rel=1
+grp=base
+dep=()
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    set -e
+    curl -O -L https://github.com/coreutils/gnulib/archive/master.tar.gz
+    tar xf master.tar.gz
+    cd ${pkg}-${ver}
+    mkdir -p $PREFIX/gnulib
+    mv * $PREFIX/gnulib
+    set +e
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    gnulib-tool --version
+}

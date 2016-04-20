@@ -1,0 +1,28 @@
+#!/bin/bash
+pkg=ocserv
+ver="${ver:-0.9.2}"
+rel=1
+grp=base
+dep=(nettle libnl gnutls readline)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O ftp://ftp.infradead.org/pub/ocserv/${pkg}-${ver}.tar.xz
+    tar xf $pkg-${ver}.tar.xz
+    cd $pkg-${ver}
+    export LIBS="-lreadline -lncurses" 
+        export LDFLAGS="$LDFLAGS -lncurses" 
+        export CPPFLAGS="$CPPFLAGS -I$PREFIX/include/readline" 
+        export CFLAGS="$CFLAGS -I$PREFIX/include/readline" 
+        export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
+        ./configure --prefix=$PREFIX  --with-libreadline-prefix=$PREFIX --sbindir=$PREFIX/bin
+    make -s LIBS="-lreadline -lncurses" LDFLAGS="$LDFLAGS -lncurses"
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $pkg -version
+}

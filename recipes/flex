@@ -1,0 +1,23 @@
+#!/bin/bash
+pkg=flex
+ver="${ver:-2.6.0}"
+rel=1
+grp=base
+dep=(bison)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O http://sourceforge.net/projects/${pkg}/files/${pkg}-${ver}.tar.gz
+    tar xzf $pkg-${ver}.tar.gz
+    cd $pkg-${ver}
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX --enable-shared --disable-ccache
+    make -s
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    flex --version
+}

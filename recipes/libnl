@@ -1,0 +1,22 @@
+#!/bin/bash
+pkg=libnl
+ver="${ver:-3.2.25}"
+rel=1
+grp=base
+dep=(flex)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -O -L http://www.carisma.slowglass.com/~tgr/libnl/files/${pkg}-${ver}.tar.gz
+    tar xzf ${pkg}-${ver}.tar.gz
+    cd ${pkg}-${ver}
+    ./configure --silent --prefix=$PREFIX --enable-shared --libdir=$PREFIX/lib
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg-3.0
+}
