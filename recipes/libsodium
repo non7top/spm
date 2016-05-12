@@ -9,7 +9,7 @@ sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
     # their site has broken cert chain
-    curl -O -L -k --cacert $PREFIX/ca-bundle.crt https://download.libsodium.org/libsodium/releases/${pkg}-${ver}.tar.gz
+    curl -O -L -k --cacert $PREFIX/ssl/cert.pem https://download.libsodium.org/libsodium/releases/${pkg}-${ver}.tar.gz
     tar xzf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
 
