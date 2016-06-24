@@ -1,0 +1,26 @@
+diff --git a/src/child.c b/src/child.c
+index 2c4dc22..96a4366 100644
+--- a/src/child.c
++++ b/src/child.c
+@@ -75,7 +75,7 @@ static int lock_fd = -1;
+ 
+ static void _child_lock_init (void)
+ {
+-        char lock_file[] = "/tmp/tinyproxy.servers.lock.XXXXXX";
++        char lock_file[] = "/dev/shm/tinyproxy.servers.lock.XXXXXX";
+ 
+         /* Only allow u+rw bits. This may be required for some versions
+          * of glibc so that mkstemp() doesn't make us vulnerable.
+diff --git a/src/heap.c b/src/heap.c
+index c7d8560..0f3814d 100644
+--- a/src/heap.c
++++ b/src/heap.c
+@@ -111,7 +111,7 @@ void *malloc_shared_memory (size_t size)
+         void *ptr;
+         char buffer[32];
+ 
+-        static const char *shared_file = "/tmp/tinyproxy.shared.XXXXXX";
++        static const char *shared_file = "/dev/shm/tinyproxy.shared.XXXXXX";
+ 
+         assert (size > 0);
+ 

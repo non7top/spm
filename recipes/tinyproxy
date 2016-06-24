@@ -12,6 +12,7 @@ _build() {
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     patch -p1 < ${_recdir}/files/tinyproxy-1.8.1-minimal.patch
+    patch -p1 < ${_recdir}/files/tinyproxy.patch
     # fix asciidoc
     ln -s /bin/true a2x
     export PATH="${PWD}:${PATH}"
