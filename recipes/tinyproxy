@@ -8,7 +8,7 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L --cacert $PREFIX/ca-bundle.crt https://github.com/tinyproxy/tinyproxy/releases/download/${ver}/${pkg}-${ver}.tar.gz
+    curl -O -L --cacert $PREFIX/ssl/cert.pem https://github.com/tinyproxy/tinyproxy/releases/download/${ver}/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     patch -p1 < ${_recdir}/files/tinyproxy-1.8.1-minimal.patch
