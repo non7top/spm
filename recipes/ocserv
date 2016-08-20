@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=ocserv
-ver="${ver:-0.10.12}"
+ver="${ver:-0.11.4}"
 rel=1
 grp=base
 dep=(nettle libnl gnutls readline)
@@ -16,9 +16,12 @@ _build() {
         export CPPFLAGS="$CPPFLAGS -I$PREFIX/include/readline" 
         export CFLAGS="$CFLAGS -I$PREFIX/include/readline" 
         export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
-        ./configure --prefix=$PREFIX  --with-libreadline-prefix=$PREFIX --sbindir=$PREFIX/bin
-    make -s LIBS="-lreadline -lncurses" LDFLAGS="$LDFLAGS -lncurses"
-    make -s install
+        ./configure --prefix=$PREFIX  --with-libreadline-prefix=$PREFIX --sbindir=$PREFIX/bin \
+            LIBREADLINE_LIBS="-L$PREFIX/lib -lreadline -lncurses"
+
+    LIBREADLINE_LIBS="$PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$PREFIX -lncurses -lreadline" LIBS="-lreadline -lncurses" \
+        make LIBS="-lreadline -lncurses" LDFLAGS="$LDFLAGS -lncurses -lreadline"
+    make -s install LIBS="-lreadline -lncurses"
 }
 
 _list() {
