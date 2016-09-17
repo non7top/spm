@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=openssl
-ver="${ver:-1.0.2h}"
+ver="${ver:-1.1.0}"
 rel=1
 grp=base
 dep=()
