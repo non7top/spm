@@ -11,12 +11,17 @@ _build() {
     curl -O http://ftp.gnu.org/gnu/ncurses/ncurses-${ver}.tar.gz
     tar xzf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
-    ./configure --silent --prefix=$PREFIX --enable-shared
+
+    export CFLAGS="$CFLAGS -fPIC"
+    export CXXFLAGS="$CXXFLAGS -fPIC"
+    export LDFLAGS="$LDFLAGS -fPIC"
+
+    ./configure --silent --prefix=$PREFIX --enable-shared 
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion lib${pkg}
+    ncurses6-config --version
 }
