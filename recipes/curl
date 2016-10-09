@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=curl
-ver="${ver:-7.47.0}"
+ver="${ver:-7.50.3}"
 rel=1
 grp=base
 dep=(openssl zlib libidn ca-bundle)
