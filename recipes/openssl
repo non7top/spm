@@ -12,7 +12,12 @@ _build() {
     curl -O -L ftp://ftp.openssl.org/source/openssl-${ver}.tar.gz
     tar xzf openssl-${ver}.tar.gz
     cd openssl-${ver}
-    ./config --prefix=$PREFIX shared
+    ./config no-sse2 enable-camellia \
+        enable-ec enable-idea enable-mdc2 \
+        enable-rc5 enable-tlsext enable-asm \
+        no-gmp no-krb5 no-rfc3779 no-sctp \
+        no-ssl2 no-ssl3 enable-heartbeats \
+        enable-zlib --prefix=$PREFIX shared threads
     make -s install
 }
 
