@@ -1,0 +1,22 @@
+#!/bin/bash
+pkg=start-stop-daemon
+ver="${ver:-1_9_18-2}"
+rel=1
+grp=base
+dep=()
+src=(http://developer.axis.com/download/distribution/apps-sys-utils-start-stop-daemon-IR1_9_18-2.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O http://developer.axis.com/download/distribution/apps-sys-utils-start-stop-daemon-IR1_9_18-2.tar.gz
+    tar xf apps-sys-utils-start-stop-daemon-IR1_9_18-2.tar.gz
+    cd apps/sys-utils/start-stop-daemon-IR1_9_18-2
+    cc start-stop-daemon.c -o start-stop-daemon
+    cp start-stop-daemon $PREFIX/bin/start-stop-daemon
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $pkg --version
+}
