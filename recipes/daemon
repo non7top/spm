@@ -8,7 +8,7 @@ src=(http://libslack.org/daemon/download/${pkg}-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -v -L -O ${src}
+    curl -L -O ${src}
     tar xf $( basename ${src} )
     cd $pkg-${ver}
     make
