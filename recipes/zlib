@@ -8,11 +8,11 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O http://zlib.net/${pkg}-${ver}.tar.gz
+    curl -L -O http://downloads.sourceforge.net/project/libpng/${pkg}/${ver}/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX
-    make -s install
+    CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX -s
+    make install
 }
 
 _list() {
