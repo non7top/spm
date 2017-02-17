@@ -2,13 +2,14 @@
 
 source local.env
 _basedir=$HOME/local
+_bootstrap=$_basedir/bootstrap
 _recdir=$( readlink -f ./recipes )
 
 __conf_dir=${_basedir}/.spm/
 _list=${__conf_dir}/list
 __tmp=$(mktemp -d)
 
-mkdir -p ${_basedir} ${__conf_dir}
+mkdir -p ${_basedir} ${__conf_dir} ${_bootstrap}
 
 action=$1
 
@@ -42,6 +43,31 @@ _is_installed() {
         fi
     done < ${_list}
     return $e
+}
+
+bootstrap_centos6() {
+    local _d=$PWD
+    _packages="http://vault.centos.org/6.7/os/x86_64/Packages/gcc-4.4.7-16.el6.x86_64.rpm \
+        http://vault.centos.org/6.7/os/x86_64/Packages/glibc-devel-2.12-1.166.el6.x86_64.rpm \
+        http://vault.centos.org/6.7/os/x86_64/Packages/gcc-c++-4.4.7-16.el6.x86_64.rpm"
+
+    for p in $_packages; do
+        cd ${__tmp}
+        curl -O $p
+        cd $_bootstrap
+        rpm2cpio ${__tmp}/$( basename $p ) | cpio -idmv --no-absolute-filenames
+    done
+    mkdir -p $PREFIX/lib
+    ln -s /lib64/libdl.so.2 $PREFIX/lib/libdl.so
+
+    cd $_d
+}
+
+check_tools() {
+    which cc || { echo "cc not found"; exit 1; }
+    which gcc || { echo "gcc not found"; exit 1; }
+    which c++ || { echo "c++ not found"; exit 1; }
+    which make || { echo "make not found"; exit 1; }
 }
 
 install() {
@@ -85,6 +111,9 @@ install() {
 case $action in
     list_available|list)     list_available ;;
     list_installed)     list_installed ;;
-    install)            install $2 ;;
+    install)            check_tools || exit 1
+                        install $2
+                        ;;
+    bootstrap)          bootstrap_centos6 ;;
     *)                  echo "Unknown action: $a"; exit 1; ;;
 esac
