@@ -1,0 +1,45 @@
+#!/bin/bash
+pkg=tmate-slave
+ver="${ver:-master}"
+rel=1
+grp=base
+dep=(automake autoconf libevent msgpack libssh readline)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    #set -ex
+    curl -O -L https://github.com/tmate-io/tmate-slave/archive/master.tar.gz
+    tar xf master.tar.gz
+    cd ${pkg}-${ver}
+    #./autogen.sh
+    PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin /usr/bin/aclocal
+    PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin /usr/bin/autoconf
+    #PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
+    #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
+    #    LIBS="-lreadline -lncurses" \
+    #    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
+    PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin    ./autogen.sh --prefix=$PREFIX
+
+        export LIBS="-lreadline -lncurses"
+        export LDFLAGS="$LDFLAGS -lncurses"
+        export CPPFLAGS="$CPPFLAGS -I$PREFIX/include/readline"
+        export CFLAGS="$CFLAGS -I$PREFIX/include/readline"
+        export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
+
+
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX || ret=$?
+
+
+       LIBREADLINE_LIBS="$PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$PREFIX -lncurses -lreadline -levent_core -lssh -lmsgpackc -lutil" LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil" \
+                   make LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil" LDFLAGS="$LDFLAGS -lncurses -lreadline -levent_core -lssh -lmsgpackc -lutil"
+           make -s install LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil"        || ret=$?
+   #set +e
+   return $ret
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    ${pkg} --version
+}
