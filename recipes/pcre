@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=pcre
-ver="${ver:-8.38}"
+ver="${ver:-8.40}"
 rel=1
 grp=base
 dep=()
