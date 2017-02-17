@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/non7top/spm.svg?branch=master)](https://travis-ci.org/non7top/spm)
-
-# spm
+# spm [![Build Status](https://travis-ci.org/non7top/spm.svg?branch=master)](https://travis-ci.org/non7top/spm)
 Simple package manager
 
 # Install
