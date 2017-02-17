@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=openssl
-ver="${ver:-1.0.2j}"
+ver="${ver:-1.0.2k}"
 rel=1
 grp=base
 dep=(zlib)
@@ -17,7 +17,8 @@ _build() {
         enable-rc5 enable-tlsext enable-asm \
         no-gmp no-krb5 no-rfc3779 no-sctp \
         no-ssl2 no-ssl3 enable-heartbeats \
-        enable-zlib --prefix=$PREFIX shared threads -I${_bootstrap}/usr/include -I${PREFIX}/include -L${_bootstrap}/usr/lib64 -L$PREFIX/lib
+        enable-zlib --prefix=$PREFIX shared threads  -I${PREFIX}/include -L$PREFIX/lib
+    #-I${_bootstrap}/usr/include -I${PREFIX}/include -L${_bootstrap}/usr/lib64 -L$PREFIX/lib
     make
     make -s install
 }
