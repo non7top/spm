@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=zlib
-ver="${ver:-1.2.8}"
+ver="${ver:-1.2.11}"
 rel=1
 grp=base
 dep=()
