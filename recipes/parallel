@@ -1,0 +1,22 @@
+#!/bin/bash
+pkg=parallel
+ver="${ver:-20170222}"
+rel=1
+grp=base
+dep=()
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -O -L http://ftp.gnu.org/gnu/$pkg/${pkg}-${ver}.tar.bz2
+    tar xf ${pkg}-${ver}.tar.bz2
+    cd ${pkg}-${ver}
+    ./configure --silent --prefix=$PREFIX --libdir=$PREFIX/lib
+    make install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    parallel --version
+}
