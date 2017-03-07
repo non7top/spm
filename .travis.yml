@@ -1,2 +1,4 @@
 language: cpp
-script: ./spm install notary
+script:
+    - ./spm install notary
+    - ./spm install ocserv
