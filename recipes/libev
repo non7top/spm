@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=libev
-ver="${ver:-4.23}"
+ver="${ver:-4.24}"
 rel=1
 grp=base
 dep=()
