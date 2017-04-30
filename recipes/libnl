@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=libnl
-ver="${ver:-3.2.29}"
+ver="${ver:-3.2.28}"
 rel=1
 grp=base
 dep=(flex)
