@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=gmp
-ver="${ver:-6.1.0}"
+ver="${ver:-6.1.2}"
 rel=1
 grp=base
 dep=(curl ca-bundle)
@@ -8,7 +8,7 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L https://gmplib.org/download/gmp/${pkg}-${ver}.tar.xz
+    curl -O -L https://ftp.gnu.org/pub/gnu/${pkg}/${pkg}-${ver}.tar.xz
     tar xf ${pkg}-${ver}.tar.xz
     cd ${pkg}-${ver}
     ./configure --silent --prefix=$PREFIX --enable-shared --libdir=$PREFIX/lib --disable-assembly
