@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=gnutls
-ver="${ver:-3.4.9}"
+ver="${ver:-3.5.16}"
 rel=1
 grp=base
 dep=(zlib nettle)
@@ -8,10 +8,10 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/${pkg}-${ver}.tar.xz
+    curl -O -L https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/${pkg}-${ver}.tar.xz
     tar xf ${pkg}-${ver}.tar.xz
     cd ${pkg}-${ver}
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig  ./configure --silent --prefix=$PREFIX --enable-shared --libdir=$PREFIX/lib --with-included-libtasn1 --without-p11-kit
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig  ./configure --silent --prefix=$PREFIX --enable-shared --libdir=$PREFIX/lib --with-included-libtasn1 --without-p11-kit --with-included-unistring
     make -s install
 }
 
