@@ -1,4 +1,10 @@
 language: cpp
-script:
-    - ./spm install notary
-    - ./spm install ocserv
+
+jobs:
+    include:
+        - stage: openssl
+          script: ./spm install openssl
+        - stage: notary
+          script: ./spm install notary
+        - stage: ocserv
+          script: ./spm install ocserv
