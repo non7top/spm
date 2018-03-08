@@ -1,0 +1,25 @@
+#!/bin/bash
+pkg=node
+ver="${ver:-v8.10.0}"
+rel=1
+grp=base
+dep=(openssl zlib ca-bundle)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl --insecure -O -L --cacert $PREFIX/ssl/cert.pem https://nodejs.org/dist/${ver}/${pkg}-${ver}.tar.gz
+    tar xzf $pkg-${ver}.tar.gz
+    cd ${pkg}-${ver}
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
+        ./configure --prefix=$PREFIX   \
+        --shared-openssl-libpath=$PREFIX/lib --shared-openssl-includes=$PREFIX/include/ --shared-openssl \
+        --shared-zlib-libpath=$PREFIX/lib --shared-zlib-includes=$PREFIX/include/ --shared-zlib
+    make -s install
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    ${pkg} --version
+}
