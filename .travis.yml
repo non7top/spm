@@ -8,3 +8,5 @@ jobs:
           script: ./spm install notary
         - stage: ocserv
           script: ./spm install ocserv
+        - stage: rdiff-backup
+          script: ./spm install rdiff-backup
