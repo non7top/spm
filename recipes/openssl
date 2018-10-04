@@ -9,7 +9,7 @@ sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
     unset MAKEFLAGS
-    curl -O -L ftp://ftp.openssl.org/source/openssl-${ver}.tar.gz
+    curl -O -L https://www.openssl.org/source/openssl-${ver}.tar.gz
     tar xzf openssl-${ver}.tar.gz
     cd openssl-${ver}
     ./config no-sse2 enable-camellia \
