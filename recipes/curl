@@ -11,7 +11,7 @@ _build() {
     curl --insecure -O -L --cacert $PREFIX/ssl/cert.pem http://piotrkosoft.net/pub/mirrors/curl/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX --with-ca-bundle=$PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX --with-ca-bundle=$PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn --with-http2
     make -s install
 }
 
