@@ -1,0 +1,23 @@
+#!/bin/bash
+pkg=golang14
+ver="${ver:-1.4.3}"
+rel=1
+grp=base
+dep=()
+src=(https://github.com/stedolan/jq/releases/download/jq-${ver}/jq-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O https://dl.google.com/go/go${ver}.src.tar.gz
+    tar xzf go${ver}.src.tar.gz
+    mv -v go $PREFIX/go${ver}
+    cd $PREFIX/go${ver}/src
+
+    CGO_ENABLED=0 ./make.bash
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $PREFIX/go${ver}/bin/go version
+}
