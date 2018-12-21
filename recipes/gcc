@@ -1,0 +1,36 @@
+#!/bin/bash
+pkg=gcc
+ver="${ver:-8.2.0}"
+rel=1
+grp=base
+dep=(curl gmp mpfr mpc)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    set -e
+    curl -O -L https://ftpmirror.gnu.org/gcc/gcc-${ver}/gcc-${ver}.tar.gz
+    tar xf gcc-${ver}.tar.gz
+    cd ${pkg}-${ver}
+    # x86_64-linux-gnu
+    ./configure -v --build=x86_64-linux-gnu \
+        --host=x86_64-linux-gnu \
+        --target=x86_64-linux-gnu \
+        --prefix=$PREFIX \
+        --enable-checking=release \
+        --enable-languages=c,c++,fortran \
+        --disable-multilib \
+        --with-gmp=$PREFIX \
+        --with-mpfr=$PREFIX \
+        --with-mpc=$PREFIX
+        # --program-suffix=-8.2
+    make 
+   make -s install
+   set +e
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $pkg --version
+}
