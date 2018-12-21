@@ -13,9 +13,7 @@ _build() {
     tar xf gcc-${ver}.tar.gz
     cd ${pkg}-${ver}
     # x86_64-linux-gnu
-    ./configure -v --build=x86_64-linux-gnu \
-        --host=x86_64-linux-gnu \
-        --target=x86_64-linux-gnu \
+    ./configure -v \
         --prefix=$PREFIX \
         --enable-checking=release \
         --enable-languages=c,c++,fortran \
@@ -23,7 +21,6 @@ _build() {
         --with-gmp=$PREFIX \
         --with-mpfr=$PREFIX \
         --with-mpc=$PREFIX
-        # --program-suffix=-8.2
     make 
    make -s install
    set +e
