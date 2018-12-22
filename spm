@@ -12,6 +12,26 @@ mkdir -p ${_basedir} ${__conf_dir}
 
 action=$1
 
+#############
+RESTORE='\033[0m'
+
+RED='\033[00;31m'
+GREEN='\033[00;32m'
+YELLOW='\033[00;33m'
+BLUE='\033[00;34m'
+PURPLE='\033[00;35m'
+CYAN='\033[00;36m'
+LIGHTGRAY='\033[00;37m'
+
+LRED='\033[01;31m'
+LGREEN='\033[01;32m'
+LYELLOW='\033[01;33m'
+LBLUE='\033[01;34m'
+LPURPLE='\033[01;35m'
+LCYAN='\033[01;36m'
+WHITE='\033[01;37m'
+############
+
 
 list_available() {
     ls -1 ${_recdir}
@@ -47,11 +67,12 @@ _is_installed() {
 install() {
     local _pkg=$1
     if [ ! -f ${_recdir}/$_pkg ]; then
-        echo "Recipe for package $_pkg not found"
+        echo -e "${LYELLOW} >> Recipe for package $_pkg not found ${RESTORE}"
         exit 1
     fi
 
     unset pkg ver rel grp mkd bak opt src sha
+    source local.env
     source ${_recdir}/$_pkg
         ( 
         unset pkg ver rel grp mkd bak opt src sha
@@ -64,7 +85,7 @@ install() {
             exit 1
         fi
     if ! _is_installed  $pkg $ver; then
-        echo "Installing $pkg"
+        echo -e "${LYELLOW} >> Installing $pkg ${RESTORE}"
         _d=$PWD
         cd ${__tmp}
         _build #> build.log-$pkg
