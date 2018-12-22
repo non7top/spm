@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=node-bin
-ver="${ver:-v0.9.12}"
+ver="${ver:-v8.14.1}"
 rel=1
 grp=base
 dep=(ca-bundle)
@@ -9,13 +9,14 @@ sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
     case `arch` in 
-        x86_64) url=https://nodejs.org/dist/v0.9.12/node-v0.9.12-linux-x64.tar.gz ;;
-        i?86)   url=https://nodejs.org/dist/v0.9.12/node-v0.9.12-linux-x86.tar.gz ;;
+        x86_64) url=https://nodejs.org/dist/${ver}/node-${ver}-linux-x64.tar.gz ;;
+        i?86)   url=https://nodejs.org/dist/${ver}/node-${ver}-linux-x86.tar.gz ;;
     esac
 
     curl --insecure -O -L --cacert $PREFIX/ssl/cert.pem $url
     tar xf $( basename $url )
-    mv node-v0.9.12-linux-*/ node/
+    mv node-${ver}-linux-*/ node/
+    rm -rf $PREFIX/node
     mv node/ $PREFIX/
 }
 
