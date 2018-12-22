@@ -1,0 +1,26 @@
+#!/bin/bash
+pkg=domoticz
+ver="${ver:-b15219463edf6e11847019ec3939ff80a376645c}"
+rel=1
+grp=base
+dep=(cmake openssl python3 boost gcc)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -O -L https://github.com/domoticz/domoticz/archive/${ver}.tar.gz
+    tar xf ${ver}.tar.gz
+    cd ${pkg}-${ver}
+    patch -p1 < ${_recdir}/files/pluginmanager_fix.patch
+    cd -
+    mkdir _build
+    cd  _build
+    cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX/domoticz
+    make -s all install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $PREFIX/domoticz/domoticz --version
+}

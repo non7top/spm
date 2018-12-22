@@ -1,0 +1,12 @@
+diff --git a/hardware/plugins/PluginManager.cpp b/hardware/plugins/PluginManager.cpp
+index 7fe72fa..ba86f35 100644
+--- a/hardware/plugins/PluginManager.cpp
++++ b/hardware/plugins/PluginManager.cpp
+@@ -6,6 +6,7 @@
+ #ifdef ENABLE_PYTHON
+ 
+ #include <tinyxml.h>
++#define __STDC_FORMAT_MACROS 1
+ #include <inttypes.h>
+ 
+ #include "PluginManager.h"
