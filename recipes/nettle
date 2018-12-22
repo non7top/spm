@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=nettle
-ver="${ver:-3.2}"
+ver="${ver:-3.4.1}"
 rel=1
 grp=base
 dep=(gmp)
