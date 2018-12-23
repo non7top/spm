@@ -2,11 +2,12 @@ language: cpp
 
 jobs:
     include:
-        - stage: "test spm builds"
+        - stage: "Start with openssl"
           name: "openssl"
           script: ./spm install openssl
-        - script: ./spm install notary
+        - stage: "Now build rest"
           name: "notary"
+          script: ./spm install notary
         - script: ./spm install ocserv
           name: "ocserv"
         - script: ./spm install rdiff-backup
