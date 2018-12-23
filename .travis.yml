@@ -2,11 +2,9 @@ language: cpp
 
 jobs:
     include:
-        - stage: openssl
-          script: ./spm install openssl
-        - stage: notary
-          script: ./spm install notary
-        - stage: ocserv
-          script: ./spm install ocserv
-        - stage: rdiff-backup
-          script: ./spm install rdiff-backup
+        script: ./spm install $PKG
+        env:
+            - PKG=openssl
+            - PKG=notary
+            - PKG=ocserv
+            - PKG=rdiff-backup
