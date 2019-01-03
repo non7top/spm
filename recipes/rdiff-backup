@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=rdiff-backup
-ver="${ver:-git}"
+ver="${ver:-1.3.3}"
 rel=1
 grp=base
 dep=(librsync0 python2)
@@ -8,9 +8,9 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L  http://savannah.nongnu.org/download/rdiff-backup/rdiff-backup-1.2.8.tar.gz
-    tar xzf rdiff-backup-1.2.8.tar.gz
-    cd rdiff-backup-1.2.8
+    curl -O -L  http://ftp.twaren.net/Unix/NonGNU/rdiff-backup/rdiff-backup-${ver}.tar.gz
+    tar xzf rdiff-backup-${ver}.tar.gz
+    cd rdiff-backup-${ver}
     python setup.py install --prefix $PREFIX
 }
 
