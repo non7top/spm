@@ -8,7 +8,7 @@ jobs:
         - stage: "Now build rest"
           name: "notary"
           script: ./spm install notary
-        - script: ./spm install ocserv
-          name: "ocserv"
+#        - script: ./spm install ocserv
+#          name: "ocserv"
         - script: ./spm install rdiff-backup
           name: "rdiff-backup"
