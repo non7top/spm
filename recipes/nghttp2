@@ -16,7 +16,7 @@ _build() {
     #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
     #    LIBS="-lreadline -lncurses" \
     #    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
-    ./configure --silent --prefix=$PREFIX
+    ./configure --silent --prefix=$PREFIX --enable-python-bindings=no
     make -s install
 }
 
