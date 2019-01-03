@@ -15,7 +15,7 @@ _build() {
     cd -
     mkdir _build
     cd  _build
-    cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX/domoticz
+    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX/domoticz -DUSE_OPENSSL_STATIC=False
     make -s all install
 }
 
