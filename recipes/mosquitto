@@ -1,0 +1,24 @@
+#!/bin/bash
+pkg=mosquitto
+ver="${ver:-1.5.5}"
+rel=1
+grp=base
+dep=(cmake)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -O -L "https://mosquitto.org/files/source/mosquitto-${ver}.tar.gz"
+    tar xf ${pkg}-${ver}.tar.gz
+    mkdir _build
+    cd  _build
+    #cmake ../${pkg}-${ver}  -DOPENSSL_ROOT_DIR=$PREFIX  -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX
+    OPENSSL_ROOT_DIR=$PREFIX cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX
+    make -s all install
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    mosquitto -h|grep version
+}
