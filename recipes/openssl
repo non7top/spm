@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=openssl
-ver="${ver:-1.0.2p}"
+ver="${ver:-1.0.2r}"
 rel=1
 grp=base
 dep=(zlib)
