@@ -1,0 +1,18 @@
+#!/bin/bash
+pkg=borgbackup
+ver="${ver:-3090000}"
+rel=1
+grp=base
+dep=(python3 libacl)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    pip3 install borgbackup
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    echo ">>>> borgbackup: $( pip3 show borgbackup|grep ^Version )"
+}
