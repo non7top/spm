@@ -20,7 +20,7 @@ _build() {
         enable-zlib --prefix=$PREFIX shared threads  -I${PREFIX}/include -L$PREFIX/lib
     #-I${_bootstrap}/usr/include -I${PREFIX}/include -L${_bootstrap}/usr/lib64 -L$PREFIX/lib
     make
-    make -s install
+    make -s install_sw
 }
 
 _list() {
