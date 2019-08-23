@@ -13,9 +13,9 @@ _build() {
     tar xf ${pkg#lib}-${ver}.src.tar.gz
     cd ${pkg#lib}-${ver}
 
-    rm $PREFIX/lib/libacl.so.1
+    rm $SPM_PREFIX/lib/libacl.so.1
     make configure
-    ./configure --prefix=$PREFIX
+    ./configure --prefix=$SPM_PREFIX
     make
     make install install-lib install-dev
 }
@@ -23,5 +23,5 @@ _build() {
 _list() {
     hash -r
     echo ">> $pkg version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion $pkg
 }

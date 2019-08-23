@@ -11,7 +11,7 @@ _build() {
     curl -O -L https://ftp.gnu.org/gnu/libtool/libtool-${ver}.tar.xz
     tar xf ${pkg}-${ver}.tar.xz
     cd ${pkg}-${ver}
-    ./configure --silent --prefix=$PREFIX --enable-shared
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
 }
 

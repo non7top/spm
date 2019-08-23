@@ -15,9 +15,9 @@ _build() {
     #./autogen.sh
     ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
         LIBS="-lreadline -lncurses" \
-        PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
-        ./autogen.sh --prefix=$PREFIX --with-readline=$PREFIX \
-       --with-readline-lib=$PREFIX/lib --with-openssl=$PREFIX/lib --without-gnutls --disable-nls
+        PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
+        ./autogen.sh --prefix=$SPM_PREFIX --with-readline=$SPM_PREFIX \
+       --with-readline-lib=$SPM_PREFIX/lib --with-openssl=$SPM_PREFIX/lib --without-gnutls --disable-nls
    make -s install
     set +e
 }

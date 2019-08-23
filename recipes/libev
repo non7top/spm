@@ -13,12 +13,12 @@ _build() {
     tar xzf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
 
-    ./configure --silent --prefix=$PREFIX --enable-shared
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion $pkg
 }

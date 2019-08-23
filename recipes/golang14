@@ -10,8 +10,8 @@ sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 _build() {
     curl -L -O https://dl.google.com/go/go${ver}.src.tar.gz
     tar xzf go${ver}.src.tar.gz
-    mv -v go $PREFIX/go${ver}
-    cd $PREFIX/go${ver}/src
+    mv -v go $SPM_PREFIX/go${ver}
+    cd $SPM_PREFIX/go${ver}/src
 
     export CGO_ENABLED=1
     mkdir -p $GOPATH
@@ -22,5 +22,5 @@ _build() {
 _list() {
     hash -r
     echo ">> $pkg version"
-    $PREFIX/go${ver}/bin/go version
+    $SPM_PREFIX/go${ver}/bin/go version
 }

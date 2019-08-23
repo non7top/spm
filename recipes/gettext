@@ -14,7 +14,7 @@ _build() {
     export CFLAGS="$CFLAGS -fPIC"
     export CXXFLAGS="$CXXFLAGS -fPIC"
     export LDFLAGS="$LDFLAGS -fPIC"
-    ./configure --silent --prefix=$PREFIX --enable-shared
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
 }
 

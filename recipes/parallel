@@ -11,7 +11,7 @@ _build() {
     curl -O -L http://ftp.gnu.org/gnu/$pkg/${pkg}-${ver}.tar.bz2
     tar xf ${pkg}-${ver}.tar.bz2
     cd ${pkg}-${ver}
-    ./configure --silent --prefix=$PREFIX --libdir=$PREFIX/lib
+    ./configure --silent --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib
     make install
 }
 

@@ -8,14 +8,14 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L --cacert $PREFIX/ssl/cert.pem https://github.com/Cofyc/dnscrypt-wrapper/archive/master.tar.gz
+    curl -O -L --cacert $SPM_PREFIX/ssl/cert.pem https://github.com/Cofyc/dnscrypt-wrapper/archive/master.tar.gz
     tar xzf master.tar.gz
     cd ${pkg}-${ver}
     make configure
-    #PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX
+    #PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX
     #make -s install
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX --sbindir=$PREFIX/bin
-    make sbindir=${PREFIX}/bin install
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX --sbindir=$SPM_PREFIX/bin
+    make sbindir=${SPM_PREFIX}/bin install
 }
 
 _list() {

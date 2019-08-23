@@ -14,13 +14,13 @@ _build() {
     cd ${pkg}-${ver}
     # x86_64-linux-gnu
     ./configure -v \
-        --prefix=$PREFIX \
+        --prefix=$SPM_PREFIX \
         --enable-checking=release \
         --enable-languages=c,c++,fortran \
         --disable-multilib \
-        --with-gmp=$PREFIX \
-        --with-mpfr=$PREFIX \
-        --with-mpc=$PREFIX
+        --with-gmp=$SPM_PREFIX \
+        --with-mpfr=$SPM_PREFIX \
+        --with-mpc=$SPM_PREFIX
     make 
    make -s install
    set +e

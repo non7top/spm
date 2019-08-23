@@ -13,11 +13,11 @@ _build() {
         i?86)   url=https://nodejs.org/dist/${ver}/node-${ver}-linux-x86.tar.gz ;;
     esac
 
-    curl --insecure -O -L --cacert $PREFIX/ssl/cert.pem $url
+    curl --insecure -O -L --cacert $SPM_PREFIX/ssl/cert.pem $url
     tar xf $( basename $url )
     mv node-${ver}-linux-*/ node/
-    rm -rf $PREFIX/node
-    mv node/ $PREFIX/
+    rm -rf $SPM_PREFIX/node
+    mv node/ $SPM_PREFIX/
 }
 
 _list() {

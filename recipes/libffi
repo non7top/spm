@@ -12,15 +12,15 @@ _build() {
     tar xf v${ver}.tar.gz
     cd ${pkg}-${ver}
 
-    #PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
+    #PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
     #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
     #    LIBS="-lreadline -lncurses" \
-    #    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
-    export ACLOCAL_PATH="$PREFIX/share/aclocal/"
+    #    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
+    export ACLOCAL_PATH="$SPM_PREFIX/share/aclocal/"
     libtoolize
-    ./autogen.sh --prefix=$PREFIX
+    ./autogen.sh --prefix=$SPM_PREFIX
 
-    ./configure --silent --prefix=$PREFIX
+    ./configure --silent --prefix=$SPM_PREFIX
     make -s install
 }
 

@@ -12,7 +12,7 @@ _build() {
     tar xf apps-sys-utils-start-stop-daemon-IR1_9_18-2.tar.gz
     cd apps/sys-utils/start-stop-daemon-IR1_9_18-2
     cc start-stop-daemon.c -o start-stop-daemon
-    cp start-stop-daemon $PREFIX/bin/start-stop-daemon
+    cp start-stop-daemon $SPM_PREFIX/bin/start-stop-daemon
 }
 
 _list() {

@@ -12,7 +12,7 @@ _build() {
     tar xf $( basename ${src} )
     cd $pkg-${ver}
     make
-    make install-daemon PREFIX=$PREFIX
+    make install-daemon SPM_PREFIX=$SPM_PREFIX
 }
 
 _list() {

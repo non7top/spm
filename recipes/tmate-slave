@@ -15,23 +15,23 @@ _build() {
     #./autogen.sh
     PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin /usr/bin/aclocal
     PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin /usr/bin/autoconf
-    #PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
+    #PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
     #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
     #    LIBS="-lreadline -lncurses" \
-    #    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig \
-    PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin    ./autogen.sh --prefix=$PREFIX
+    #    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
+    PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin    ./autogen.sh --prefix=$SPM_PREFIX
 
         export LIBS="-lreadline -lncurses"
         export LDFLAGS="$LDFLAGS -lncurses"
-        export CPPFLAGS="$CPPFLAGS -I$PREFIX/include/readline"
-        export CFLAGS="$CFLAGS -I$PREFIX/include/readline"
-        export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
+        export CPPFLAGS="$CPPFLAGS -I$SPM_PREFIX/include/readline"
+        export CFLAGS="$CFLAGS -I$SPM_PREFIX/include/readline"
+        export PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig
 
 
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX || ret=$?
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX || ret=$?
 
 
-       LIBREADLINE_LIBS="$PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$PREFIX -lncurses -lreadline -levent_core -lssh -lmsgpackc -lutil" LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil" \
+       LIBREADLINE_LIBS="$SPM_PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$SPM_PREFIX -lncurses -lreadline -levent_core -lssh -lmsgpackc -lutil" LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil" \
                    make LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil" LDFLAGS="$LDFLAGS -lncurses -lreadline -levent_core -lssh -lmsgpackc -lutil"
            make -s install LIBS="-lreadline -lncurses -levent_core -lssh -lmsgpackc -lutil"        || ret=$?
    #set +e

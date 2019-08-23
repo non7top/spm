@@ -11,7 +11,7 @@ _build() {
     curl -L -O http://sourceforge.net/projects/swig/files/swig/swig-${ver}/swig-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd $pkg-${ver}
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX --enable-shared --disable-ccache
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX --enable-shared --disable-ccache
     make -s
     make -s install
 }

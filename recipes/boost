@@ -11,8 +11,8 @@ _build() {
     curl -O -L https://dl.bintray.com/boostorg/release/${ver//_/.}/source/boost_${ver}.tar.bz2
     tar xf ${pkg}_${ver}.tar.bz2
     cd ${pkg}_${ver}
-    #./configure --silent --prefix=$PREFIX --enable-shared
-    ./bootstrap.sh --prefix=$PREFIX
+    #./configure --silent --prefix=$SPM_PREFIX --enable-shared
+    ./bootstrap.sh --prefix=$SPM_PREFIX
     ./b2 stage threading=multi link=static --with-thread --with-system --with-date_time --with-chrono
     ./b2 install threading=multi link=static --with-thread --with-system --with-date_time --with-chrono
     #make -s install

@@ -11,12 +11,12 @@ _build() {
     curl -O -L https://sourceforge.net/projects/librsync/files/librsync/0.9.7/librsync-0.9.7.tar.gz
     tar xzf librsync-${ver}.tar.gz
     cd librsync-${ver}
-    ./configure --silent --prefix=$PREFIX --enable-shared
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> librsync version"
-    strings $PREFIX/lib/librsync.so |tail -n1
+    strings $SPM_PREFIX/lib/librsync.so |tail -n1
 }

@@ -12,8 +12,8 @@ _build() {
     curl -O -L https://github.com/coreutils/gnulib/archive/master.tar.gz
     tar xf master.tar.gz
     cd ${pkg}-${ver}
-    mkdir -p $PREFIX/gnulib
-    mv * $PREFIX/gnulib
+    mkdir -p $SPM_PREFIX/gnulib
+    mv * $SPM_PREFIX/gnulib
     set +e
 }
 

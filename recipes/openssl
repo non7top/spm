@@ -17,8 +17,8 @@ _build() {
         enable-rc5 enable-tlsext enable-asm \
         no-gmp no-krb5 no-rfc3779 no-sctp \
         no-ssl2 no-ssl3 enable-heartbeats \
-        enable-zlib --prefix=$PREFIX shared threads  -I${PREFIX}/include -L$PREFIX/lib
-    #-I${_bootstrap}/usr/include -I${PREFIX}/include -L${_bootstrap}/usr/lib64 -L$PREFIX/lib
+        enable-zlib --prefix=$SPM_PREFIX shared threads  -I${SPM_PREFIX}/include -L$SPM_PREFIX/lib
+    #-I${_bootstrap}/usr/include -I${SPM_PREFIX}/include -L${_bootstrap}/usr/lib64 -L$SPM_PREFIX/lib
     make
     make -s install_sw
 }

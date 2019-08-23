@@ -11,7 +11,7 @@ _build() {
     curl -O https://www.python.org/ftp/python/$ver/Python-$ver.tgz
     tar xzf Python-$ver.tgz
     cd Python-$ver
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --silent --prefix=$PREFIX --enable-shared
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
     pip3 install -U pip
 }

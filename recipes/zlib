@@ -11,12 +11,12 @@ _build() {
     curl -L -O http://downloads.sourceforge.net/project/libpng/${pkg}/${ver}/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
-    CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX -s
+    CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX -s
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> ${pkg} version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion ${pkg}
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion ${pkg}
 }

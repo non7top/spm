@@ -11,12 +11,12 @@ _build() {
     curl -O -L https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/${pkg}-${ver}.tar.xz
     tar xf ${pkg}-${ver}.tar.xz
     cd ${pkg}-${ver}
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig  ./configure --silent --prefix=$PREFIX --enable-shared --libdir=$PREFIX/lib --with-included-libtasn1 --without-p11-kit --with-included-unistring
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig  ./configure --silent --prefix=$SPM_PREFIX --enable-shared --libdir=$SPM_PREFIX/lib --with-included-libtasn1 --without-p11-kit --with-included-unistring
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion $pkg
 }

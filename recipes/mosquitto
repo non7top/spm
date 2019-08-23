@@ -12,8 +12,8 @@ _build() {
     tar xf ${pkg}-${ver}.tar.gz
     mkdir _build
     cd  _build
-    #cmake ../${pkg}-${ver}  -DOPENSSL_ROOT_DIR=$PREFIX  -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX
-    OPENSSL_ROOT_DIR=$PREFIX cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX
+    #cmake ../${pkg}-${ver}  -DOPENSSL_ROOT_DIR=$SPM_PREFIX  -DCMAKE_INSTALL_SPM_PREFIX:PATH=$SPM_PREFIX
+    OPENSSL_ROOT_DIR=$SPM_PREFIX cmake ../${pkg}-${ver} -DCMAKE_INSTALL_SPM_PREFIX:PATH=$SPM_PREFIX
     make -s all install
 }
 

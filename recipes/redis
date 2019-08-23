@@ -11,7 +11,7 @@ _build() {
     curl -O -L http://download.redis.io/releases/${pkg}-${ver}.tar.gz
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
-    make -s PREFIX=$PREFIX install
+    make -s SPM_PREFIX=$SPM_PREFIX install
 }
 
 _list() {

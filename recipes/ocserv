@@ -13,13 +13,13 @@ _build() {
     cd $pkg-${ver}
     export LIBS="-lreadline -lncurses" 
         export LDFLAGS="$LDFLAGS -lncurses" 
-        export CPPFLAGS="$CPPFLAGS -I$PREFIX/include/readline" 
-        export CFLAGS="$CFLAGS -I$PREFIX/include/readline" 
-        export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
-        ./configure --prefix=$PREFIX  --with-libreadline-prefix=$PREFIX --sbindir=$PREFIX/bin \
-            LIBREADLINE_LIBS="-L$PREFIX/lib -lreadline -lncurses"
+        export CPPFLAGS="$CPPFLAGS -I$SPM_PREFIX/include/readline" 
+        export CFLAGS="$CFLAGS -I$SPM_PREFIX/include/readline" 
+        export PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig
+        ./configure --prefix=$SPM_PREFIX  --with-libreadline-prefix=$SPM_PREFIX --sbindir=$SPM_PREFIX/bin \
+            LIBREADLINE_LIBS="-L$SPM_PREFIX/lib -lreadline -lncurses"
 
-    LIBREADLINE_LIBS="$PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$PREFIX -lncurses -lreadline" LIBS="-lreadline -lncurses" \
+    LIBREADLINE_LIBS="$SPM_PREFIX/lib/libreadline.so -Wl,-rpath -Wl,$SPM_PREFIX -lncurses -lreadline" LIBS="-lreadline -lncurses" \
         make LIBS="-lreadline -lncurses" LDFLAGS="$LDFLAGS -lncurses -lreadline"
     make -s install LIBS="-lreadline -lncurses"
 }

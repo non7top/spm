@@ -12,7 +12,7 @@ _build() {
     tar xzf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
     autoreconf -i
-    ./configure --silent --prefix=$PREFIX --disable-maintainer-mode
+    ./configure --silent --prefix=$SPM_PREFIX --disable-maintainer-mode
     make -s install
 }
 

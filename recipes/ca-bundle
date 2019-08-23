@@ -8,8 +8,8 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    mkdir -p $PREFIX/ssl/
-    curl --insecure -s -4 -L https://curl.haxx.se/ca/cacert.pem -o $PREFIX/ssl/cert.pem
+    mkdir -p $SPM_PREFIX/ssl/
+    curl --insecure -s -4 -L https://curl.haxx.se/ca/cacert.pem -o $SPM_PREFIX/ssl/cert.pem
 }
 
 _list() {

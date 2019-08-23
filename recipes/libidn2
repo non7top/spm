@@ -11,12 +11,12 @@ _build() {
     curl -O http://ftp.vim.org/ftp/gnu/libidn/${pkg}-${ver}.tar.gz
     tar xzf libidn2-${ver}.tar.gz
     cd libidn2-${ver}
-    ./configure --silent --prefix=$PREFIX --enable-shared
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> libidn version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion libidn2
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion libidn2
 }

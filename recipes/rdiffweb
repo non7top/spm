@@ -11,9 +11,9 @@ _build() {
     curl -O -L  https://github.com/ikus060/rdiffweb/archive/master.tar.gz
     tar xzf master.tar.gz
     cd rdiffweb-master
-    python setup.py install --prefix $PREFIX
-    mkdir -vp $PREFIX/etc/rdiffweb
-    cp -v rdw.conf $PREFIX/etc/rdiffweb
+    python setup.py install --prefix $SPM_PREFIX
+    mkdir -vp $SPM_PREFIX/etc/rdiffweb
+    cp -v rdw.conf $SPM_PREFIX/etc/rdiffweb
 }
 
 _list() {

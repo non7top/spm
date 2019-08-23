@@ -11,7 +11,7 @@ _build() {
     curl -O -L https://github.com/Kitware/CMake/releases/download/v${ver}/${pkg}-${ver}.tar.gz
     tar xf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
-    ./configure --prefix=$PREFIX
+    ./configure --prefix=$SPM_PREFIX
    make -s install
 }
 

@@ -11,10 +11,10 @@ _build() {
 #    curl -O https://pypi.python.org/packages/source/M/M2Crypto/M2Crypto-${ver}.tar.gz
  #   tar xzf $pkg-${ver}.tar.gz
   #  cd $pkg-${ver}
-    export SWIG_FEATURES="-cpperraswarn -includeall -I$PREFIX/include/"
+    export SWIG_FEATURES="-cpperraswarn -includeall -I$SPM_PREFIX/include/"
     pip install $pkg
-    #    python setup.py build_ext --include-dirs=$PREFIX/include/ --swig=$PREFIX/bin/swig --openssl=$PREFIX/
-    #python setup.py install --prefix=$PREFIX
+    #    python setup.py build_ext --include-dirs=$SPM_PREFIX/include/ --swig=$SPM_PREFIX/bin/swig --openssl=$SPM_PREFIX/
+    #python setup.py install --prefix=$SPM_PREFIX
 }
 
 _list() {

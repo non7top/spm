@@ -13,13 +13,13 @@ _build() {
     #cd ${pkg}-${ver}
     mkdir _build
     cd  _build
-    cmake ../${pkg}-${ver} -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX
-    #./configure --silent --prefix=$PREFIX --enable-shared
+    cmake ../${pkg}-${ver} -DCMAKE_INSTALL_SPM_PREFIX:PATH=$SPM_PREFIX
+    #./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s all install
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion $pkg
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion $pkg
 }

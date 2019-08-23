@@ -11,12 +11,12 @@ _build() {
     curl -O https://www.sqlite.org/2015/sqlite-autoconf-${ver}.tar.gz
     tar xzf sqlite-autoconf-${ver}.tar.gz
     cd sqlite-autoconf-${ver}
-    ./configure --silent --prefix=$PREFIX
+    ./configure --silent --prefix=$SPM_PREFIX
     make -s install
 }
 
 _list() {
     hash -r
     echo ">> ${pkg} version"
-    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig pkg-config --modversion sqlite3
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion sqlite3
 }
