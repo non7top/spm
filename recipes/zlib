@@ -12,7 +12,7 @@ _build() {
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig ./configure --prefix=$PREFIX -s
-    make install
+    make -s install
 }
 
 _list() {
