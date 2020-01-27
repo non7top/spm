@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=python3
-ver="${ver:-3.6.4}"
+ver="${ver:-3.7.6}"
 rel=1
 grp=base
 dep=(openssl zlib curl)
@@ -20,4 +20,6 @@ _list() {
     hash -r
     echo ">>Python3 version"
     echo "$( $pkg --version 2>&1 | tr -d '\n\r' ) / $( $pkg -c "import ssl;print(ssl.OPENSSL_VERSION);print(ssl.get_default_verify_paths())" )"
+    echo ">>> pip version"
+    echo "$( pip --version )"
 }
