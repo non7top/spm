@@ -1,9 +1,9 @@
 #!/bin/bash
 pkg=curl
-ver="${ver:-7.64.0}"
+ver="${ver:-7.68.0}"
 rel=1
 grp=base
-dep=(openssl zlib libidn ca-bundle nghttp2)
+dep=(openssl zlib libidn2 ca-bundle nghttp2)
 src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
@@ -12,7 +12,7 @@ _build() {
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
-        ./configure --prefix=$SPM_PREFIX --with-ca-bundle=$SPM_PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn2 --with-nghttp2
+        ./configure --prefix=$SPM_PREFIX --with-ca-bundle=$SPM_PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn2 --with-nghttp2 --enable-alt-svc
     make -s install
 }
 
