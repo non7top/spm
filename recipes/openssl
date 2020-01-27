@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=openssl
-ver="${ver:-1.0.2r}"
+ver="${ver:-1.1.1d}"
 rel=1
 grp=base
 dep=(zlib)
@@ -14,8 +14,8 @@ _build() {
     cd openssl-${ver}
     ./config no-sse2 enable-camellia \
         enable-ec enable-idea enable-mdc2 \
-        enable-rc5 enable-tlsext enable-asm \
-        no-gmp no-krb5 no-rfc3779 no-sctp \
+        enable-rc5 enable-asm \
+        no-rfc3779 no-sctp \
         no-ssl2 no-ssl3 enable-heartbeats \
         enable-zlib --prefix=$SPM_PREFIX shared threads  -I${SPM_PREFIX}/include -L$SPM_PREFIX/lib
     #-I${_bootstrap}/usr/include -I${SPM_PREFIX}/include -L${_bootstrap}/usr/lib64 -L$SPM_PREFIX/lib
