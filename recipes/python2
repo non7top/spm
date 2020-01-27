@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=python2
-ver="${ver:-2.7.15}"
+ver="${ver:-2.7.17}"
 rel=1
 grp=base
 dep=(openssl zlib curl)
@@ -13,10 +13,14 @@ _build() {
     cd Python-$ver
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared
     make -s install
+    echo ">>>> Installing pip"
+    python -m ensurepip --default-pip
 }
 
 _list() {
     hash -r
     echo ">>Python2 version"
     echo "$( $pkg --version 2>&1 | tr -d '\n\r' ) / $( $pkg -c "import ssl;print ssl.OPENSSL_VERSION;print ssl.get_default_verify_paths()" )"
+    echo ">>> pip2 version"
+    echo "$( pip2 --version)"
 }
