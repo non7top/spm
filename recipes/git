@@ -1,0 +1,29 @@
+#!/bin/bash
+pkg=git
+ver="${ver:-2.25.1}"
+rel=1
+grp=base
+dep=(openssl zlib ca-bundle expat gettext)
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    set -xv
+    curl --insecure -O -L --cacert $SPM_PREFIX/ssl/cert.pem https://github.com/git/git/archive/v${ver}.tar.gz
+    tar xzf v${ver}.tar.gz
+    cd ${pkg}-${ver}
+    make configure
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
+        ./configure --prefix=$SPM_PREFIX   \
+        --with-openssl \
+        --with-curl --with-expat
+    # fking stupid git, couldn't find a way to disable gettext&locales
+    NO_GETTEXT=1 make NO_GETTEXT=YesPlease
+    make install
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    ${pkg} --version
+}
