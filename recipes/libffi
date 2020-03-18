@@ -25,7 +25,7 @@ _build() {
     ./autogen.sh --prefix=$SPM_PREFIX
 
     ./configure --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory
-    make install-exec
+    make install-exec install-pkgconfigDATA
 }
 
 _list() {
