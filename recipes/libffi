@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=libffi
-ver="${ver:-3.2.1}"
+ver="${ver:-3.3}"
 rel=1
 grp=base
 dep=(autoconf automake libtool)
@@ -12,11 +12,6 @@ _build() {
     tar xf v${ver}.tar.gz
     cd ${pkg}-${ver}
 
-    pwd
-    ls -l
-    which patch || { echo "patch utility not found"; exit 1; }
-    patch -p1 < ${_recdir}/files/libffi-3.2.1-disable-multi-os-directory.patch
-
     export ACLOCAL_PATH="/home/test/local/share/aclocal/"
     export ACLOCAL_FLAGS="-I /home/test/local/share/aclocal/"
 
@@ -24,12 +19,13 @@ _build() {
     aclocal --verbose
     ./autogen.sh --prefix=$SPM_PREFIX
 
-    ./configure --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory
-    make install-exec install-pkgconfigDATA
+    ./configure --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory --disable-docs
+    make install
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    strings $SPM_PREFIX/lib/libffi.la|grep -e current -e age -e revision
+    #strings $SPM_PREFIX/lib/libffi.la|grep -e current -e age -e revision
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion ${pkg}
 }
