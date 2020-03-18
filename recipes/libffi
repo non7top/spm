@@ -3,7 +3,7 @@ pkg=libffi
 ver="${ver:-3.2.1}"
 rel=1
 grp=base
-dep=(autoconf libtool)
+dep=(autoconf automake libtool)
 src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
@@ -12,20 +12,23 @@ _build() {
     tar xf v${ver}.tar.gz
     cd ${pkg}-${ver}
 
-    #PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
-    #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
-    #    LIBS="-lreadline -lncurses" \
-    #    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
-    export ACLOCAL_PATH="$SPM_PREFIX/share/aclocal/"
-    libtoolize
+    pwd
+    ls -l
+    patch -p1 < ${_recdir}/files/libffi-3.2.1-disable-multi-os-directory.patch
+
+    export ACLOCAL_PATH="/home/test/local/share/aclocal/"
+    export ACLOCAL_FLAGS="-I /home/test/local/share/aclocal/"
+
+    libtoolize -i -c
+    aclocal --verbose
     ./autogen.sh --prefix=$SPM_PREFIX
 
-    ./configure --silent --prefix=$SPM_PREFIX
-    make -s install
+    ./configure --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory
+    make install-exec
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
-    libtoolize  --version
+    strings $SPM_PREFIX/lib/libffi.la|grep -e current -e age -e revision
 }
