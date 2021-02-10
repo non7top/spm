@@ -3,7 +3,7 @@ pkg=python3
 ver="${ver:-3.7.6}"
 rel=1
 grp=base
-dep=(openssl zlib curl libffi)
+dep=(openssl zlib curl libffi sqlite3)
 #libffi for ctypes
 src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
@@ -12,7 +12,7 @@ _build() {
     curl -O https://www.python.org/ftp/python/$ver/Python-$ver.tgz
     tar xzf Python-$ver.tgz
     cd Python-$ver
-    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared
+    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared --enable-loadable-sqlite-extensions
     make -s install
     pip3 install -U pip
 }
