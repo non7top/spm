@@ -3,7 +3,7 @@ pkg=python3
 ver="${ver:-3.7.6}"
 rel=1
 grp=base
-dep=(openssl zlib curl libffi sqlite3)
+dep=(openssl zlib curl libffi sqlite3 bzip2)
 #libffi for ctypes
 src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)

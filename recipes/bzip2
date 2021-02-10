@@ -1,0 +1,24 @@
+#!/bin/bash
+pkg=bzip2
+ver="${ver:-1.0.8}"
+rel=1
+grp=base
+dep=()
+src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    curl -L -O https://sourceware.org/pub/bzip2/${pkg}-${ver}.tar.gz
+    tar xzf ${pkg}-${ver}.tar.gz
+    cd ${pkg}-${ver}
+    #CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX -s
+    make -f Makefile-libbz2_so PREFIX=$SPM_PREFIX
+    make install PREFIX=$SPM_PREFIX
+}
+
+_list() {
+    hash -r
+    echo ">> ${pkg} version"
+    bzip2 --version
+    #PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig pkg-config --modversion ${pkg}
+}
