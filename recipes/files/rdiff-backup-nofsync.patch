@@ -1,0 +1,123 @@
+From 4b17efa7cdb58a58985896923b0654f74952c453 Mon Sep 17 00:00:00 2001
+From: Jiri Lunacek <jiri.lunacek@hosting90.cz>
+Date: Fri, 1 Mar 2019 11:37:40 +0100
+Subject: [PATCH 1/2] add --no-fsync support
+
+---
+ rdiff-backup/rdiff_backup/Globals.py | 6 ++++++
+ rdiff-backup/rdiff_backup/Main.py    | 8 +++++---
+ rdiff-backup/rdiff_backup/regress.py | 3 ++-
+ rdiff-backup/rdiff_backup/rpath.py   | 6 ++++--
+ 4 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/rdiff-backup/rdiff_backup/Globals.py b/rdiff-backup/rdiff_backup/Globals.py
+index 8799708b9..b508f88a4 100644
+--- a/rdiff-backup/rdiff_backup/Globals.py
++++ b/rdiff-backup/rdiff_backup/Globals.py
+@@ -245,6 +245,12 @@
+ # tempfile.tempdir value on remote connections
+ remote_tempdir = None
+ 
++# Fsync everything by default. Use --no-fsync only if you really know what you are doing
++# Not having the data written to disk may render your backup unusable in case of FS failure.
++# Using --no-fsync disables only fsync of files during backup and sync() system call upon backup finish
++# and pre-regress
++do_fsync = True
++
+ def get(name):
+ 	"""Return the value of something in this module"""
+ 	return globals()[name]
+diff --git a/rdiff-backup/rdiff_backup/Main.py b/rdiff-backup/rdiff_backup/Main.py
+index aa63cf41d..3935b0889 100644
+--- a/rdiff-backup/rdiff_backup/Main.py
++++ b/rdiff-backup/rdiff_backup/Main.py
+@@ -86,7 +86,8 @@ def normalize_path(path):
+ 		  "restrict-read-only=", "restrict-update-only=", "server",
+ 		  "ssh-no-compression", "tempdir=", "terminal-verbosity=",
+ 		  "test-server", "user-mapping-file=", "verbosity=", "verify",
+-		  "verify-at-time=", "version"])
++		  "verify-at-time=", "version",
++		  "no-fsync"])
+ 	except getopt.error, e:
+ 		commandline_error("Bad commandline options: " + str(e))
+ 
+@@ -206,6 +207,7 @@ def normalize_path(path):
+ 		elif opt == "-V" or opt == "--version":
+ 			print "rdiff-backup " + Globals.version
+ 			sys.exit(0)
++		elif opt == "--no-fsync": Globals.do_fsync = False
+ 		else: Log.FatalError("Unknown option %s" % opt)
+ 	Log("Using rdiff-backup version %s" % (Globals.version), 4)
+ 
+@@ -534,8 +536,8 @@ def backup_remove_curmirror_local():
+ 	if curmir_incs[0].getinctime() < curmir_incs[1].getinctime():
+ 		older_inc = curmir_incs[0]
+ 	else: older_inc = curmir_incs[1]
+-
+-	C.sync() # Make sure everything is written before curmirror is removed
++	if Globals.do_fsync:
++		C.sync() # Make sure everything is written before curmirror is removed
+ 	older_inc.delete()
+ 
+ 
+diff --git a/rdiff-backup/rdiff_backup/regress.py b/rdiff-backup/rdiff_backup/regress.py
+index 4d7b6b6e3..900aaeb77 100644
+--- a/rdiff-backup/rdiff_backup/regress.py
++++ b/rdiff-backup/rdiff_backup/regress.py
+@@ -71,7 +71,8 @@ def Regress(mirror_rp):
+ 	for rf in iterate_meta_rfs(mirror_rp, inc_rpath): ITR(rf.index, rf)
+ 	ITR.Finish()
+ 	if former_current_mirror_rp:
+-		C.sync() # Sync first, since we are marking dest dir as good now
++		if Globals.do_fsync:
++			C.sync() # Sync first, since we are marking dest dir as good now
+ 		former_current_mirror_rp.delete()
+ 
+ def set_regress_time():
+diff --git a/rdiff-backup/rdiff_backup/rpath.py b/rdiff-backup/rdiff_backup/rpath.py
+index c10897693..2163d6ac1 100644
+--- a/rdiff-backup/rdiff_backup/rpath.py
++++ b/rdiff-backup/rdiff_backup/rpath.py
+@@ -1284,8 +1284,9 @@ def fsync(self, fp = None):
+ 		This can be useful for directories.
+ 
+ 		"""
+-		if not fp: self.conn.rpath.RPath.fsync_local(self)
+-		else: os.fsync(fp.fileno())
++		if Globals.do_fsync:
++			if not fp: self.conn.rpath.RPath.fsync_local(self)
++			else: os.fsync(fp.fileno())
+ 
+ 	def fsync_local(self, thunk = None):
+ 		"""fsync current file, run locally
+@@ -1294,6 +1295,7 @@ def fsync_local(self, thunk = None):
+ 		the file's file descriptor.
+ 
+ 		"""
++		assert Globals.do_fsync
+ 		assert self.conn is Globals.local_connection
+ 		try:
+ 			fd = os.open(self.path, os.O_RDONLY)
+
+From c512a9ef75334d4b3dfdbfc6e2b63fe6af3c80f2 Mon Sep 17 00:00:00 2001
+From: Jiri Lunacek <jiri.lunacek@hosting90.cz>
+Date: Wed, 18 Sep 2019 14:15:02 +0200
+Subject: [PATCH 2/2] Print slash on directories
+
+---
+ rdiff-backup/rdiff_backup/Main.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rdiff-backup/rdiff_backup/Main.py b/rdiff-backup/rdiff_backup/Main.py
+index 3935b0889..5990f78d0 100644
+--- a/rdiff-backup/rdiff_backup/Main.py
++++ b/rdiff-backup/rdiff_backup/Main.py
+@@ -819,7 +819,7 @@ def ListAtTime(rp):
+ 	mirror_rp = restore_root.new_index(restore_index)
+ 	inc_rp = mirror_rp.append_path("increments", restore_index)
+ 	for rorp in rp.conn.restore.ListAtTime(mirror_rp, inc_rp, rest_time):
+-		print rorp.get_indexpath()
++		print rorp.get_indexpath() + ('/' if rorp.isdir() else '')
+ 	
+ 
+ def Compare(compare_type, src_rp, dest_rp, compare_time = None):
