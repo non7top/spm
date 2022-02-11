@@ -1,123 +1,1312 @@
-From 4b17efa7cdb58a58985896923b0654f74952c453 Mon Sep 17 00:00:00 2001
-From: Jiri Lunacek <jiri.lunacek@hosting90.cz>
-Date: Fri, 1 Mar 2019 11:37:40 +0100
-Subject: [PATCH 1/2] add --no-fsync support
-
----
- rdiff-backup/rdiff_backup/Globals.py | 6 ++++++
- rdiff-backup/rdiff_backup/Main.py    | 8 +++++---
- rdiff-backup/rdiff_backup/regress.py | 3 ++-
- rdiff-backup/rdiff_backup/rpath.py   | 6 ++++--
- 4 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/rdiff-backup/rdiff_backup/Globals.py b/rdiff-backup/rdiff_backup/Globals.py
-index 8799708b9..b508f88a4 100644
---- a/rdiff-backup/rdiff_backup/Globals.py
-+++ b/rdiff-backup/rdiff_backup/Globals.py
-@@ -245,6 +245,12 @@
- # tempfile.tempdir value on remote connections
- remote_tempdir = None
- 
-+# Fsync everything by default. Use --no-fsync only if you really know what you are doing
-+# Not having the data written to disk may render your backup unusable in case of FS failure.
-+# Using --no-fsync disables only fsync of files during backup and sync() system call upon backup finish
-+# and pre-regress
-+do_fsync = True
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/changelog ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/changelog
+--- ../rdiff-backup-1.2.8/debian/changelog	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/changelog	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,472 @@
++rdiff-backup (1.2.8-7-nofsync) unstable; urgency=low
 +
- def get(name):
- 	"""Return the value of something in this module"""
- 	return globals()[name]
-diff --git a/rdiff-backup/rdiff_backup/Main.py b/rdiff-backup/rdiff_backup/Main.py
-index aa63cf41d..3935b0889 100644
---- a/rdiff-backup/rdiff_backup/Main.py
-+++ b/rdiff-backup/rdiff_backup/Main.py
-@@ -86,7 +86,8 @@ def normalize_path(path):
- 		  "restrict-read-only=", "restrict-update-only=", "server",
- 		  "ssh-no-compression", "tempdir=", "terminal-verbosity=",
- 		  "test-server", "user-mapping-file=", "verbosity=", "verify",
--		  "verify-at-time=", "version"])
-+		  "verify-at-time=", "version",
-+		  "no-fsync"])
- 	except getopt.error, e:
- 		commandline_error("Bad commandline options: " + str(e))
++  * Patch add --no-fsync.
++
++ -- Christoph Dittmann <github@christoph-d.de>  Mon, 08 Dec 2014 21:23:34 +0100
++
++rdiff-backup (1.2.8-7) unstable; urgency=low
++
++  * debian/control
++    - bump Standards-Version to 3.9.2
++    - add X-Python-Version field
++    - remove dpatch build-dependency
++  * debian/source/format
++    - switch to 3.0 (quilt)
++  * debian/patches
++    - migrated *.dpatch to quilt format
++    - add 02_python_2.6_deprecationwarning.diff patch (Closes:#587370)
++    - add 03_fix_hardlinks.diff (Closes:#558035)
++  * debian/rules
++    - switch to dh --with python2
++
++ -- Carl Chenet <chaica@ohmytux.com>  Wed, 04 Jan 2012 02:23:04 +0100
++
++rdiff-backup (1.2.8-6) unstable; urgency=low
++
++  * debian/control
++    - switching Maintainer to PAPT team
++    - switching Uploaders to Carl Chenet <chaica@ohmytux.com>
++  * debian/patches/01_fix_restricted_test-server_option.dpatch
++    - added one line accidentely removed in the previous patch (Closes:#570627)
++
++ -- Carl Chenet <chaica@ohmytux.com>  Sat, 20 Feb 2010 12:29:55 +0100
++
++rdiff-backup (1.2.8-5) unstable; urgency=low
++
++  [ Carl Chenet ]
++  * debian/local/bash-completion 
++    - Switch from dashes to underscores in bash function names (Closes:#531606)
++
++  [ Piotr Ożarowski ]
++  * Provide public module again (sorry for not checking rdepends more
++    carefully, closes: #547135)
++    - bump minimum required debhelper version to 7.3.5
++    - replace python-dev with python-all-dev build dependency
++
++ -- Carl Chenet <chaica@ohmytux.com>  Thu, 17 Sep 2009 21:07:43 +0200
++
++rdiff-backup (1.2.8-4) unstable; urgency=low
++
++  * Patch fixing restricted test-server option (Closes:#522278).
++  * debian/control
++    - add dpatch in Build-Depends
++  * debian/rules
++    - add call to dpatch
++  * Create debian/patches directory
++  * Create debian/patches/00list file
++  * Create debian/patches/01_fix_restricted_test-server_option.dpatch 
++  * Create debian/README.source for dpatch
++
++ -- Carl Chenet <chaica@ohmytux.com>  Mon, 07 Sep 2009 23:42:56 +0200
++
++rdiff-backup (1.2.8-3) unstable; urgency=low
++
++  * New debian/watch file
++  * debian/control
++    - Bump to Standard-Versions 3.8.3
++    - New maintainer (Closes: #540633).
++    - Set Uploaders field to PAPT.
++    - Vcs-Svn and Vcs-Browser fields were added.
++    - Bump debhelper to (>= 7.0.50~).
++  * debian/rules
++    - Use now a private directory for not polluting global namespace
++
++ -- Carl Chenet <chaica@ohmytux.com>  Mon, 31 Aug 2009 23:25:49 +0200
++
++rdiff-backup (1.2.8-2) unstable; urgency=low
++
++  * Prefixing debhelper files with package name.
++  * Wrapping build-depends.
++  * Removing version from librsync build-depends, already fulfilled in stable.
++  * Renaming local directory to store debian additions to more sensible name.
++  * Minimizing rules file.
++  * Updating year in copyright file.
++  * Removing vcs fields.
++  * Orphaning package.
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Aug 2009 11:41:00 +0200
++
++rdiff-backup (1.2.8-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.8 (Closes: #520089):
++    - Don't crash on zlib errors (Closes: #518531).
++
++ -- Daniel Baumann <daniel@debian.org>  Thu, 19 Mar 2009 06:25:00 +0100
++
++rdiff-backup (1.2.7-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.7.
++
++ -- Daniel Baumann <daniel@debian.org>  Wed, 11 Mar 2009 08:10:00 +0100
++
++rdiff-backup (1.2.6-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.6.
++
++ -- Daniel Baumann <daniel@debian.org>  Wed, 11 Mar 2009 08:06:00 +0100
++
++rdiff-backup (1.2.5-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.5.
++
++ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jan 2009 23:17:00 -0500
++
++rdiff-backup (1.2.4-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.4.
++
++ -- Daniel Baumann <daniel@debian.org>  Sat, 17 Jan 2009 23:13:00 -0500
++
++rdiff-backup (1.2.3-1) unstable; urgency=high
++
++  * Replacing obsolete dh_clean -k with dh_prep.
++  * Merging upstream version 1.2.3:
++    - fixes regression with "Too many levels of symbolic links" exception
++      (Closes: #409514).
++
++ -- Daniel Baumann <daniel@debian.org>  Mon, 29 Dec 2008 22:26:00 +0100
++
++rdiff-backup (1.2.2-1) unstable; urgency=low
++
++  * Merging upstream version 1.2.2.
++
++ -- Daniel Baumann <daniel@debian.org>  Tue, 28 Oct 2008 13:50:00 +0100
++
++rdiff-backup (1.2.1-2) unstable; urgency=low
++
++  * Updating vcs fields in control file.
++  * Adding bash-completion from Andreas Olsson <andreas@arrakis.se>.
++
++ -- Daniel Baumann <daniel@debian.org>  Sat, 04 Oct 2008 10:46:00 +0200
++
++rdiff-backup (1.2.1-1) unstable; urgency=medium
++
++  * Merging upstream version 1.2.1.
++
++ -- Daniel Baumann <daniel@debian.org>  Fri, 29 Aug 2008 22:19:00 +0200
++
++rdiff-backup (1.2.0-1) unstable; urgency=medium
++
++  * Merging upstream version 1.2.0
++    (Closes: #345627, #420869, #426110, #443686, #463035, #480785, #481098).
++
++ -- Daniel Baumann <daniel@debian.org>  Thu, 31 Jul 2008 22:27:00 +0200
++
++rdiff-backup (1.1.17-1) unstable; urgency=low
++
++  * Merging upstream version 1.1.17 (Closes: #491185):
++    - fixes failure with 'exceptions.KeyError' (Closes: #410586).
++    - fixes failure with 'KeyError inode' exception (Closes: #486653).
++
++ -- Daniel Baumann <daniel@debian.org>  Thu, 17 Jul 2008 16:30:00 +0200
++
++rdiff-backup (1.1.16-2) unstable; urgency=medium
++
++  * Making build-depends against librsync version to ensure 4gb bugfix.
++
++ -- Daniel Baumann <daniel@debian.org>  Wed, 25 Jun 2008 11:42:00 +0200
++
++rdiff-backup (1.1.16-1) unstable; urgency=medium
++
++  * Removing 01-manpage.dpatch, went upstream.
++  * Reordering rules file.
++  * Rewriting copyright file in machine-interpretable format.
++  * Removing watch file.
++  * Simplyfing control file.
++  * Adding vcs fields in control file.
++  * Upgrading package to standards 3.8.0.
++  * Upgrading package to debhelper 7.
++  * Merging upstream version 1.1.16.
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 22 Jun 2008 23:14:00 +0200
++
++rdiff-backup (1.1.15-2) unstable; urgency=low
++
++  * Applied patches from Justin Pryzby <jpryzby@quoininc.com> to fix manpage
++    typos (Closes: #461934).
++
++ -- Daniel Baumann <daniel@debian.org>  Mon, 21 Jan 2008 21:42:00 +0100
++
++rdiff-backup (1.1.15-1) unstable; urgency=low
++
++  * New upstream release.
++
++ -- Daniel Baumann <daniel@debian.org>  Wed, 09 Jan 2008 20:59:00 +0100
++
++rdiff-backup (1.1.14-2) unstable; urgency=low
++
++  * Bumping to new policy.
++  * Using new homepage field in control.
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 23 Dec 2007 17:26:00 +0100
++
++rdiff-backup (1.1.14-1) unstable; urgency=low
++
++  * New upstream release:
++    - Adds support for custom tmpdir location (Closes: #289395).
++
++ -- Daniel Baumann <daniel@debian.org>  Mon, 13 Aug 2007 23:18:00 +0200
++
++rdiff-backup (1.1.12-1) unstable; urgency=low
++
++  * New upstream release:
++    - Doesn't crash if previous backup failed
++      Closes: #376781, #388720, #422961, #426216).
++    - Doesn't fail when saving fat32 to fat32 (Closes: #422593).
++    - Fixes a typo with RPath in metadata (Closes: #349593).
++    - Doesn't crash without compression (Closes: #395100).
++  * Fixed typo in long description (Closes: #426806).
++  * Dropping 01-fs-abilities.dpatch, went upstream.
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 15 Jul 2007 20:58:00 +0200
++
++rdiff-backup (1.1.9-2) unstable; urgency=low
++
++  * Added patch from Marc Dyksterhouse to fix --list-increments
++    (Closes: #413981).
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 01 Apr 2007 19:13:00 +0100
++
++rdiff-backup (1.1.9-1) unstable; urgency=low
++
++  * New upstream release.
++  * Bumped to debhelper 5.
++
++ -- Daniel Baumann <daniel@debian.org>  Mon, 05 Mar 2007 01:27:00 +0100
++
++rdiff-backup (1.1.7-1) experimental; urgency=low
++
++  * New upstream release:
++    - fixes problem with device files handling as user (Closes: #395096).
++    - fixes problems with storing to smbfs/cifs (Closes: #386983, #404947).
++  * Dropping 01-manpage.dpatch, went upstream.
++  * Uploading to experimental to not interfere the testing migration of
++    1.1.5-4.
++
++ -- Daniel Baumann <daniel@debian.org>  Fri, 29 Dec 2006 16:15:00 +0100
++
++rdiff-backup (1.1.5-4) unstable; urgency=medium
++
++  * In a previous version, the python-pylibacl and python-pyxattr got lost
++    from depends, re-adding them as recommends now, which is more appropriate
++    anyway (Closes: #404708).
++
++ -- Daniel Baumann <daniel@debian.org>  Wed, 27 Dec 2006 20:38:00 +0100
++
++rdiff-backup (1.1.5-3) unstable; urgency=low
++
++  * Migrated to new python policy (Closes: #380928, #383415).
++
++ -- Daniel Baumann <daniel@debian.org>  Thu, 17 Aug 2006 17:06:00 +0200
++
++rdiff-backup (1.1.5-2) unstable; urgency=low
++
++  * New email address.
++  * Bumped policy version.
++
++ -- Daniel Baumann <daniel@debian.org>  Sun, 30 Jul 2006 08:46:00 +0200
++
++rdiff-backup (1.1.5-1) unstable; urgency=low
++
++  * New upstream release.
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Mon, 02 Jan 2006 15:53:00 +0100
++
++rdiff-backup (1.1.4-1) unstable; urgency=low
++
++  * New upstream release:
++    - now using development-releases as they are stable enough.
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 27 Dec 2005 15:50:00 +0100
++
++rdiff-backup (1.0.3-1) unstable; urgency=low
++
++  * New upstream release (Closes: #338055).
++  * Removed old patches which are now in upstream.
++  * Added patch to fix manpage characters (Closes: #335162).
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Mon, 28 Nov 2005 09:21:00 +0100
++
++rdiff-backup (1.0.1-1) unstable; urgency=low
++
++  * New upstream release (Closes: #323332, #302099):
++    - works with SElinux (Closes: #306798).
++    - compiled with ACL support now (Closes: #224666).
++  * Removed old patches which are now in upstream.
++  * Added watch file.
++  * Bumped policy version.
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Wed, 28 Sep 2005 15:32:00 +0200
++
++rdiff-backup (0.13.4-5) unstable; urgency=high
++
++  * Forgot debian/compat (Closes: #295638).
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Fri, 18 Feb 2005 00:29:00 +0100
++
++rdiff-backup (0.13.4-4) unstable; urgency=low
++
++  * New maintainer (Closes: #261578).
++  * Took over Alec Berrymans <alec@thened.net> interim package.
++  * debian/* redone and updated to new policy.
++  * debian/control: added correct python depency (Closes: #252960).
++  * Added rdiff-backup-hardlinks.dpatch to insure flag '--no-hard-links' is not
++    overridden by filesystem abilities and to fix handling of hard links on Mac
++    OS X (Thanks to Dave Vasilevsky <djvasi@gmail.com>).
++  * Added typo-fix.dpatch to fix an error message typo (Thanks to Thomas Jarosch
++    <thomas.jarosch@intra2net.com>).
++  * Added patch from CVS to fix broken '--calculate-average' flag (Thanks to
++    Dean Gaudet <dean@arctic.org>, Closes: #241906, #225471, #225485).
++  * Patched hard link test with afs-hardlinks.dpatch to only enable hard links
++    if able to link across directories. AFS only allows hard links within a
++    directory (Closes: #260018).
++  * Patched error message thrown when invoking after an unsuccessful backup with
++    typo-fix-2.dpatch (Closes: #256266).
++  * Added patch backup_warn_if_infinite_regress.dpatch backported from CVS to
++    fix handling of destination directory as subdirectories of source directory
++    (Closes: #235875).
++  * Patched types of files not to be compressed with no-compress-regexp.dpatch
++    (Closes: #270715).
++  * Added patch restrict-read-only.dpatch to correct the behavior of the
++    '--restrict-read-only' flag to bring it in line with the documented behavior
++    (Thanks to Dean Gaudet <dean@arctic.org>, Closes: #277044).
++
++ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 15 Feb 2005 18:29:00 +0100
++
++rdiff-backup (0.13.4-3) unstable; urgency=low
++
++  * Orphaning this package.  (WNPP bug has been submitted).
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 26 Jul 2004 14:56:59 -0500
++
++rdiff-backup (0.13.4-2) unstable; urgency=low
++
++  * Added build-dep on python.  Closes: #259127.
++
++ -- John Goerzen <jgoerzen@complete.org>  Tue, 13 Jul 2004 10:53:51 -0500
++
++rdiff-backup (0.13.4-1) unstable; urgency=low
++
++  * New upstream release.  This version contains my
++    MacOS X patches upstream, so they are no longer included
++    in the Debian diff.
++  * .deb now includes examples.html.  Closes: #239750.
++
++ -- John Goerzen <jgoerzen@complete.org>  Fri, 04 Jun 2004 11:47:24 -0500
++
++rdiff-backup (0.13.3.jgoerzen-3) unstable; urgency=low
++
++  * xattr support was failing with IOError: [Errno 78] Function not
++    implemented on Alpha.  Back out xattr and ACL support for now.
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 22 Dec 2003 18:00:20 -0600
++
++rdiff-backup (0.13.3.jgoerzen-2) unstable; urgency=low
++
++  * Add support for ACLs and EAs by (build-)depending on pylibacl and
++    pyxattr.  Closes: #224666.
++  * Newer debhelper builds package in debian/rdiff-backup instead of
++    debian/tmp.  The rules file command that deleted the rdiff-backup-0.x.y
++    directory that setup.py installed therefore quit working.  Fixed.
++    Closes: #224664.
++
++ -- John Goerzen <jgoerzen@complete.org>  Sat, 20 Dec 2003 16:26:42 -0600
++
++rdiff-backup (0.13.3.jgoerzen-1) unstable; urgency=low
++
++  * New upstream release.  0.13.3 is stabilizing.
++    Closes: #221840.
++  * The "jgoerzen" in the name means this includes my patches to the 0.13.3
++    tree, which implement saving of Finder metadata from MacOS.  I expect
++    this to be integrated into the mainline shortly.   These patches are in
++    my tla archive
++    jgoerzen@complete.org--projects/rdiff-backup--jgoerzen--0.13 at
++    http://arch.complete.org/projects.
++
++ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 21:05:39 -0600
++
++rdiff-backup (0.12.5-2) unstable; urgency=low
++
++  * Build-dep on librsync-dev >= 0.9.6-7 to get a versioned
++    lib dependency in the generated .deb.  That version fixed
++    its shlibs file.  Closes: #210368.
++
++ -- John Goerzen <jgoerzen@complete.org>  Sat, 11 Oct 2003 23:09:14 -0500
++
++rdiff-backup (0.12.5-1) unstable; urgency=low
++
++  * New upstream release.  Closes: #213094.
++  * Calls debian/python, and removed .pyc files from .deb.
++    Closes: #207416.
++
++ -- John Goerzen <jgoerzen@complete.org>  Fri, 10 Oct 2003 11:43:41 -0500
++
++rdiff-backup (0.12.3-1) unstable; urgency=low
++
++  * New upstream release.  Closes: #202749, #192238, #203209.
++  * Deleted usr/share/doc/rdiff-backup-*.  Closes: #182001.
++  * Updated to Python 2.3.
++  * New req: librsync 0.9.6.
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 11 Aug 2003 17:40:27 -0500
++
++rdiff-backup (0.10.1-3) unstable; urgency=low
++
++  * Added build-depends on python2.2.  Closes: #167651.
++
++ -- John Goerzen <jgoerzen@complete.org>  Thu, 07 Nov 2002 08:44:55 -0600
++
++rdiff-backup (0.10.1-2) unstable; urgency=low
++
++  * Fixed installation -- now uses new setup.py.  Closes: #167131.
++
++ -- John Goerzen <jgoerzen@complete.org>  Wed, 30 Oct 2002 15:53:21 -0600
++
++rdiff-backup (0.10.1-1) unstable; urgency=low
++
++  * New upstream release
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 28 Oct 2002 15:50:25 -0600
++
++rdiff-backup (0.8.0-1) unstable; urgency=low
++
++  * New upstream release
++
++ -- John Goerzen <jgoerzen@complete.org>  Fri, 12 Jul 2002 07:57:45 -0500
++
++rdiff-backup (0.6.1-1) unstable; urgency=low
++
++  * New upstream release.  Closes: #147470, #143828.
++
++ -- John Goerzen <jgoerzen@complete.org>  Thu, 23 May 2002 16:07:09 -0500
++
++rdiff-backup (0.6.0-1) unstable; urgency=low
++
++  * New upstream release
++
++ -- John Goerzen <jgoerzen@complete.org>  Tue, 19 Mar 2002 09:46:20 -0500
++
++rdiff-backup (0.5.3-1) unstable; urgency=low
++
++  * New upstream release
++
++ -- John Goerzen <jgoerzen@complete.org>  Tue, 05 Mar 2002 09:48:05 -0500
++
++rdiff-backup (0.5.0-2) unstable; urgency=low
++
++  * Applied a patch from the upstream author to correct remote
++    backups in some situations.
++
++ -- John Goerzen <jgoerzen@complete.org>  Thu, 21 Feb 2002 08:46:52 -0500
++
++rdiff-backup (0.5.0-1) unstable; urgency=low
++
++  * New upstream release
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 18 Feb 2002 10:53:30 -0500
++
++rdiff-backup (0.4.4-1) unstable; urgency=low
++
++  * Initial Release, lintian clean.  Closes: #133442.
++
++ -- John Goerzen <jgoerzen@complete.org>  Mon, 11 Feb 2002 14:15:42 -0500
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/compat ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/compat
+--- ../rdiff-backup-1.2.8/debian/compat	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/compat	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1 @@
++7
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/control ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/control
+--- ../rdiff-backup-1.2.8/debian/control	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/control	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,31 @@
++Source: rdiff-backup
++Section: utils
++Priority: optional
++X-Python-Version: >= 2.5
++Maintainer: Python Applications Packaging Team <python-apps-team@lists.alioth.debian.org>
++Uploaders: Carl Chenet <chaica@ohmytux.com>
++Build-Depends:
++ debhelper (>= 7.3.5~), python-all-dev, python-pylibacl, python-pyxattr,
++ librsync-dev
++Standards-Version: 3.9.2
++Homepage: http://rdiff-backup.nongnu.org/
++Vcs-Svn: svn://svn.debian.org/python-apps/packages/rdiff-backup/trunk/
++Vcs-Browser: http://svn.debian.org/viewsvn/python-apps/packages/rdiff-backup/trunk/
++
++Package: rdiff-backup
++Architecture: any
++Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}
++Recommends: python-pylibacl, python-pyxattr
++Description: remote incremental backup
++ rdiff-backup backs up one directory to another, possibly over a network. The
++ target directory ends up a copy of the source directory, but extra reverse
++ diffs are stored in a special subdirectory of that target directory, so you can
++ still recover files lost some time ago. The idea is to combine the best
++ features of a mirror and an incremental backup. rdiff-backup also preserves
++ subdirectories, hard links, dev files, permissions, uid/gid ownership,
++ modification times, extended attributes, acls, and resource forks.
++ .
++ Also, rdiff-backup can operate in a bandwidth efficient manner over a pipe,
++ like rsync. Thus you can use rdiff-backup and ssh to securely back a hard drive
++ up to a remote location, and only the differences will be transmitted. Finally,
++ rdiff-backup is easy to use and settings have sensible defaults.
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/copyright ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/copyright
+--- ../rdiff-backup-1.2.8/debian/copyright	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/copyright	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,42 @@
++Author: Ben Escoto <ben@emerose.org>
++Download: http://rdiff-backup.nongnu.org/
++
++Files: *
++Copyright: (C) 2001-2008 Ben Escoto <bescoto@stanford.edu>
++License: GPL-2+
++ This program is free software; you can redistribute it and/or
++ modify it under the terms of the GNU General Public License
++ as published by the Free Software Foundation; either version 2
++ of the License, or (at your option) any later version.
++ .
++ This program is distributed in the hope that it will be useful,
++ but WITHOUT ANY WARRANTY; without even the implied warranty of
++ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ GNU General Public License for more details.
++ .
++ You should have received a copy of the GNU General Public License
++ along with this program; if not, write to the Free Software
++ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ .
++ On Debian systems, the complete text of the GNU General Public License
++ can be found in /usr/share/common-licenses/GPL-2 file.
++
++Files: debian/*
++Copyright: (C) 2005-2009 Daniel Baumann <daniel@debian.org>
++License: GPL-2+
++ This program is free software; you can redistribute it and/or
++ modify it under the terms of the GNU General Public License
++ as published by the Free Software Foundation; either version 2
++ of the License, or (at your option) any later version.
++ .
++ This program is distributed in the hope that it will be useful,
++ but WITHOUT ANY WARRANTY; without even the implied warranty of
++ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ GNU General Public License for more details.
++ .
++ You should have received a copy of the GNU General Public License
++ along with this program; if not, write to the Free Software
++ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ .
++ On Debian systems, the complete text of the GNU General Public License
++ can be found in /usr/share/common-licenses/GPL-2 file.
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/local/bash-completion ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/local/bash-completion
+--- ../rdiff-backup-1.2.8/debian/local/bash-completion	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/local/bash-completion	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,97 @@
++# /etc/bash_completion.d/rdiff-backup - bash-completion for rdiff-backup
++# 2008 Andreas Olsson <andreas@arrakis.se>
++#
++# Developed for 1.2.x but can be "ported" to older version by modifying the
++# lists of available options.
++#
++# Besides supplying options it will also try to determine
++# when it is suitible to complete what.
++#
++# Feel free to send comments or suggestions.
++
++shopt -s extglob
++
++_rdiff_backup ()
++{
++	local cur prev wfilearg wpatharg wnumarg wotherarg longopts shortopts options
++	COMPREPLAY=()
++	cur="${COMP_WORDS[COMP_CWORD]}"
++	prev="${COMP_WORDS[COMP_CWORD-1]}"
++
++	# These options will be completed by the path to a filename.
++	wfilearg="--exclude-filelist|--exclude-globbing-filelist|--exclude-if-present|
++		|--group-mapping-file|--include-filelist|--include-globbing-filelist|
++		|--user-mapping-file"
++
++	# These options will be completed by the path to a directory.
++	wpatharg="--remote-tempdir|--restrict|--restrict-read-only|
++		|--restrict-update-only|--tempdir"
++
++	# These options will be completed by a number, from 0 to 9.
++	wnumarg="--terminal-verbosity|--verbosity|-v"
++
++	# These options requires a non-completable argument.
++	# They won't be completed at all.
++	wotherarg="--compare-at-time|--compare-full-at-time|--compare-hash-at-time|
++		|--current-time|--exclude|--exclude-regexp|--include|--include-regexp|
++		|--list-at-time|--list-changed-since|--max-file-size|--min-file-size|
++		|--no-compression-regexp|-r|--restore-as-of|--remote-schema|
++		|--remove-older-than|--verify-at-time"
++
++	# Availible long options
++	longopts="--backup-mode --calculate-average --carbonfile --check-destination-dir \
++		--compare --compare-at-time --compare-full --compare-full-at-time \
++		--compare-hash --compare-hash-at-time --create-full-path --current-time \
++		--exclude --exclude-device-files --exclude-fifos --exclude-filelist \
++		--exclude-filelist-stdin --exclude-globbing-filelist --exclude-globbing-filelist-stdin \
++		--exclude-other-filesystems --exclude-regexp --exclude-special-files --exclude-sockets \
++		--exclude-symbolic-links --exclude-if-present --force --group-mapping-file --include \
++		--include-filelist --include-filelist-stdin --include-globbing-filelist \
++		--include-globbing-filelist-stdin --include-regexp --include-special-files \
++		--include-symbolic-links --list-at-time --list-changed-since --list-increments \
++		--list-increment-sizes --max-file-size --min-file-size --never-drop-acls --no-acls \
++		--no-carbonfile --no-compare-inode --no-compression --no-compression-regexp  --no-eas \
++		--no-file-statistics --no-hard-links --null-separator --parsable-output  \
++		--override-chars-to-quote --preserve-numerical-ids --print-statistics --restore-as-of \
++		----remote-schema --remote-tempdir --remove-older-than --restrict \
++		--restrict-read-only --restrict-update-only --ssh-no-compression --tempdir \
++		--terminal-verbosity --test-server --user-mapping-file --verbosity --verify \
++		--verify-at-time --version"
++
++	# Availible short options
++	shortopts="-b -l -r -v -V"
++
++	options=${longopts}" "${shortopts}
++
++	case "$prev" in
++		@($wfilearg))
++			_filedir
++			return 0
++			;;
++
++		@($wpatharg))
++			_filedir -d
++			return 0
++			;;
++
++		@($wotherarg))
++			return 0
++			;;
++
++		@($wnumarg))
++			COMPREPLY=( $( compgen -W '0 1 2 3 4 5 6 7 8 9' -- $cur ) )
++			return 0
++			;;
++	esac
++
++	if [[ ${cur} == -* ]]
++	then
++		COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
++		return 0
++	else
++		_filedir
++		return 0
++	fi
++}
++
++complete -F _rdiff_backup -o filenames rdiff-backup
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/00list ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/00list
+--- ../rdiff-backup-1.2.8/debian/patches/00list	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/00list	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,2 @@
++01_fix_restricted_test-server_option.dpatch
++02_python_2.6_deprecationwarning.dpatch
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/01_fix_restricted_test-server_option.diff ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/01_fix_restricted_test-server_option.diff
+--- ../rdiff-backup-1.2.8/debian/patches/01_fix_restricted_test-server_option.diff	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/01_fix_restricted_test-server_option.diff	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,48 @@
++# Description: 01_fix_restricted_test-server_option.diff
++# Author: Carl Chenet <chaica@ohmytux.com>
++
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/Main.py rdiff-backup-1.2.8/rdiff_backup/Main.py
++--- rdiff-backup-1.2.8~/rdiff_backup/Main.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/Main.py	2010-02-20 11:26:27.000000000 +0100
++@@ -288,7 +288,7 @@
++ 	elif action == "remove-older-than": RemoveOlderThan(rps[0])
++ 	elif action == "restore": Restore(*rps)
++ 	elif action == "restore-as-of": Restore(rps[0], rps[1], 1)
++-	elif action == "test-server": SetConnections.TestConnections()
+++	elif action == "test-server": SetConnections.TestConnections(rps)
++ 	elif action == "verify": Verify(rps[0])
++ 	else: raise AssertionError("Unknown action " + action)
++ 
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py rdiff-backup-1.2.8/rdiff_backup/SetConnections.py
++--- rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/SetConnections.py	2010-02-20 11:29:43.000000000 +0100
++@@ -241,20 +241,25 @@
++ 	Globals.backup_reader = Globals.isbackup_reader = \
++ 		  Globals.backup_writer = Globals.isbackup_writer = None
++ 
++-def TestConnections():
+++def TestConnections(rpaths):
++ 	"""Test connections, printing results"""
++ 	if len(Globals.connections) == 1: print "No remote connections specified"
++ 	else:
++-		for i in range(1, len(Globals.connections)): test_connection(i)
+++		assert len(Globals.connections) == len(rpaths) + 1
+++		for i in range(1, len(Globals.connections)):
+++			test_connection(i, rpaths[i-1])
++ 
++-def test_connection(conn_number):
+++def test_connection(conn_number, rp):
++ 	"""Test connection.  conn_number 0 is the local connection"""
++ 	print "Testing server started by: ", __conn_remote_cmds[conn_number]
++ 	conn = Globals.connections[conn_number]
++ 	try:
++ 		assert conn.Globals.get('current_time') is None
++-		assert type(conn.os.listdir('.')) is list
++ 		version = conn.Globals.get('version')
+++		try:
+++			assert type(conn.os.getuid()) is int
+++		except AttributeError: # Windows doesn't support os.getuid()
+++			assert type(conn.os.listdir(rp.path)) is list
++ 	except:
++ 		sys.stderr.write("Server tests failed\n")
++ 		raise
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/01_fix_restricted_test-server_option.dpatch ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/01_fix_restricted_test-server_option.dpatch
+--- ../rdiff-backup-1.2.8/debian/patches/01_fix_restricted_test-server_option.dpatch	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/01_fix_restricted_test-server_option.dpatch	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,52 @@
++#! /bin/sh /usr/share/dpatch/dpatch-run
++## 01_fix_restricted_test-server_option.dpatch by Carl Chenet <chaica@ohmytux.com>
++##
++## All lines beginning with `## DP:' are a description of the patch.
++## DP: Reimplemented from the Ubuntu patch by <andreas@arrakis.se>
++## DP: Original patch from : https://bugs.launchpad.net/ubuntu/+source/rdiff-backup/+bug/349072
++
++@DPATCH@
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/Main.py rdiff-backup-1.2.8/rdiff_backup/Main.py
++--- rdiff-backup-1.2.8~/rdiff_backup/Main.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/Main.py	2010-02-20 13:36:19.655842194 +0100
++@@ -288,7 +288,7 @@
++ 	elif action == "remove-older-than": RemoveOlderThan(rps[0])
++ 	elif action == "restore": Restore(*rps)
++ 	elif action == "restore-as-of": Restore(rps[0], rps[1], 1)
++-	elif action == "test-server": SetConnections.TestConnections()
+++	elif action == "test-server": SetConnections.TestConnections(rps)
++ 	elif action == "verify": Verify(rps[0])
++ 	else: raise AssertionError("Unknown action " + action)
++ 
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py rdiff-backup-1.2.8/rdiff_backup/SetConnections.py
++--- rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/SetConnections.py	2010-02-20 13:39:11.876431875 +0100
++@@ -241,19 +241,24 @@
++ 	Globals.backup_reader = Globals.isbackup_reader = \
++ 		  Globals.backup_writer = Globals.isbackup_writer = None
++ 
++-def TestConnections():
+++def TestConnections(rpaths):
++ 	"""Test connections, printing results"""
++ 	if len(Globals.connections) == 1: print "No remote connections specified"
++ 	else:
++-		for i in range(1, len(Globals.connections)): test_connection(i)
+++		assert len(Globals.connections) == len(rpaths) + 1
+++		for i in range(1, len(Globals.connections)):
+++			test_connection(i, rpaths[i-1])
++ 
++-def test_connection(conn_number):
+++def test_connection(conn_number, rp):
++ 	"""Test connection.  conn_number 0 is the local connection"""
++ 	print "Testing server started by: ", __conn_remote_cmds[conn_number]
++ 	conn = Globals.connections[conn_number]
++ 	try:
++ 		assert conn.Globals.get('current_time') is None
++-		assert type(conn.os.listdir('.')) is list
+++		try:
+++			assert type(conn.os.getuid()) is int
+++		except AttributeError: # Windows doesn't support os.getuid()
+++			assert type(conn.os.listdir(rp.path)) is list
++ 		version = conn.Globals.get('version')
++ 	except:
++ 		sys.stderr.write("Server tests failed\n")
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/02_python_2.6_deprecationwarning.diff ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/02_python_2.6_deprecationwarning.diff
+--- ../rdiff-backup-1.2.8/debian/patches/02_python_2.6_deprecationwarning.diff	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/02_python_2.6_deprecationwarning.diff	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,25 @@
++# Description: 02_python_2.6_deprecationwarning.diff
++# Author: by  <andreas@pc13267v15.midgard.liu.se> converted to Quilt by Carl Chenet <chaica@ohmytux.com>
++# from the nmu suggestion by Carlos Alberto Lopez Perez <clopez@igalia.com>
++# patch adapted from the one at https://savannah.nongnu.org/bugs/?26064
++# This fix the following warning: "DeprecationWarning: os.popen2 is 
++# deprecated. Use the subprocess module."
++# Also, the *nix version of rdiff-backup requires shell=True instead of
++# shell=False in the subprocess.Popen call
++
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py rdiff-backup-1.2.8/rdiff_backup/SetConnections.py
++--- rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/SetConnections.py	2009-10-03 19:27:54.935647306 +0200
++@@ -135,10 +135,10 @@
++ 	if not remote_cmd: return Globals.local_connection
++ 
++ 	Log("Executing " + remote_cmd, 4)
++-	if os.name == "nt":
+++	if map(int, sys.version.split()[0].split('.')[:2]) >= [2, 6]:
++ 		import subprocess
++ 		try:
++-			process = subprocess.Popen(remote_cmd, shell=False, bufsize=0,
+++			process = subprocess.Popen(remote_cmd, shell=True, bufsize=0,
++ 								stdin=subprocess.PIPE, 
++ 								stdout=subprocess.PIPE)
++ 			(stdin, stdout) = (process.stdin, process.stdout)
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/02_python_2.6_deprecationwarning.dpatch ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/02_python_2.6_deprecationwarning.dpatch
+--- ../rdiff-backup-1.2.8/debian/patches/02_python_2.6_deprecationwarning.dpatch	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/02_python_2.6_deprecationwarning.dpatch	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,27 @@
++#! /bin/sh /usr/share/dpatch/dpatch-run
++## 02_python_2.6_deprecationwarning.dpatch by  <andreas@pc13267v15.midgard.liu.se>
++##
++## All lines beginning with `## DP:' are a description of the patch.
++## DP: patch adapted from the one at https://savannah.nongnu.org/bugs/?26064
++## DP: This fix the following warning: "DeprecationWarning: os.popen2 is 
++## DP: deprecated. Use the subprocess module."
++## DP: Also, the *nix version of rdiff-backup requires shell=True instead of
++## DP: shell=False in the subprocess.Popen call
++
++@DPATCH@
++diff -urNad rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py rdiff-backup-1.2.8/rdiff_backup/SetConnections.py
++--- rdiff-backup-1.2.8~/rdiff_backup/SetConnections.py	2009-03-16 15:36:21.000000000 +0100
+++++ rdiff-backup-1.2.8/rdiff_backup/SetConnections.py	2009-10-03 19:27:54.935647306 +0200
++@@ -135,10 +135,10 @@
++ 	if not remote_cmd: return Globals.local_connection
++ 
++ 	Log("Executing " + remote_cmd, 4)
++-	if os.name == "nt":
+++	if map(int, sys.version.split()[0].split('.')[:2]) >= [2, 6]:
++ 		import subprocess
++ 		try:
++-			process = subprocess.Popen(remote_cmd, shell=False, bufsize=0,
+++			process = subprocess.Popen(remote_cmd, shell=True, bufsize=0,
++ 								stdin=subprocess.PIPE, 
++ 								stdout=subprocess.PIPE)
++ 			(stdin, stdout) = (process.stdin, process.stdout)
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/03_fix_hardlinks.diff ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/03_fix_hardlinks.diff
+--- ../rdiff-backup-1.2.8/debian/patches/03_fix_hardlinks.diff	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/03_fix_hardlinks.diff	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,96 @@
++# Description: fix_hardlinks.diff
++# Author: by  <clopez@igalia.com> converted to Quilt format by Carl Chenet <chaica@ohmytux.com>
++# from the nmu suggestion by Carlos Alberto Lopez Perez <clopez@igalia.com>
++# Apply hard-links bug fix patch
++# https://savannah.nongnu.org/bugs/index.php?26848
++
++diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rdiff-backup-1.2.8~/rdiff_backup/Hardlink.py rdiff-backup-1.2.8/rdiff_backup/Hardlink.py
++--- rdiff-backup-1.2.8~/rdiff_backup/Hardlink.py	2009-03-16 14:36:21.000000000 +0000
+++++ rdiff-backup-1.2.8/rdiff_backup/Hardlink.py	2012-01-03 11:44:21.708987145 +0000
++@@ -95,7 +95,13 @@
++ 		src_rorp.getnumlinks() == dest_rorp.getnumlinks() == 1):
++ 		return 1 # Hard links don't apply
++ 
++-	if src_rorp.getnumlinks() < dest_rorp.getnumlinks(): return 0
+++	"""The sha1 of linked files is only stored in the metadata of the first 
+++	linked file on the dest side.  If the first linked file on the src side is
+++	deleted, then the sha1 will also be deleted on the dest side, so we test for this
+++	& report not equal so that another sha1 will be stored with the next linked
+++	file on the dest side"""
+++	if (not islinked(src_rorp) and not dest_rorp.has_sha1()): return 0
+++	if src_rorp.getnumlinks() != dest_rorp.getnumlinks(): return 0
++ 	src_key = get_inode_key(src_rorp)
++ 	index, remaining, dest_key, digest = _inode_index[src_key]
++ 	if dest_key == "NA":
++diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' rdiff-backup-1.2.8~/rdiff_backup/compare.py rdiff-backup-1.2.8/rdiff_backup/compare.py
++--- rdiff-backup-1.2.8~/rdiff_backup/compare.py	2009-03-16 14:36:21.000000000 +0000
+++++ rdiff-backup-1.2.8/rdiff_backup/compare.py	2012-01-03 11:43:33.792989189 +0000
++@@ -25,7 +25,7 @@
++ """
++ 
++ from __future__ import generators
++-import Globals, restore, rorpiter, log, backup, static, rpath, hash, robust
+++import Globals, restore, rorpiter, log, backup, static, rpath, hash, robust, Hardlink
++ 
++ def Compare(src_rp, mirror_rp, inc_rp, compare_time):
++ 	"""Compares metadata in src_rp dir with metadata in mirror_rp at time"""
++@@ -80,14 +80,15 @@
++ 	bad_files = 0
++ 	for repo_rorp in repo_iter:
++ 		if not repo_rorp.isreg(): continue
++-		if not repo_rorp.has_sha1():
+++		verify_sha1 = get_hash(repo_rorp)
+++		if not verify_sha1:
++ 			log.Log("Warning: Cannot find SHA1 digest for file %s,\n"
++ 					"perhaps because this feature was added in v1.1.1"
++ 					% (repo_rorp.get_indexpath(),), 2)
++ 			continue
++ 		fp = RepoSide.rf_cache.get_fp(base_index + repo_rorp.index, repo_rorp)
++ 		computed_hash = hash.compute_sha1_fp(fp)
++-		if computed_hash == repo_rorp.get_sha1():
+++		if computed_hash == verify_sha1:
++ 			log.Log("Verified SHA1 digest of " + repo_rorp.get_indexpath(), 5)
++ 		else:
++ 			bad_files += 1
++@@ -95,11 +96,24 @@
++ 					"doesn't match recorded digest of\n   %s\n"
++ 					"Your backup repository may be corrupted!" %
++ 					(repo_rorp.get_indexpath(), computed_hash,
++-					 repo_rorp.get_sha1()), 2)
+++					 verify_sha1), 2)
++ 	RepoSide.close_rf_cache()
++ 	if not bad_files: log.Log("Every file verified successfully.", 3)
++ 	return bad_files
++ 
+++def get_hash (repo_rorp):
+++	""" Try to get a sha1 digest from the repository.  If hardlinks 
+++	are saved in the metadata, get the sha1 from the first hardlink """
+++	Hardlink.add_rorp(repo_rorp)
+++	if Hardlink.islinked(repo_rorp):
+++		verify_sha1 = Hardlink.get_sha1(repo_rorp)
+++	elif repo_rorp.has_sha1():
+++		verify_sha1 = repo_rorp.get_sha1()
+++	else:
+++		verify_sha1 = None
+++	Hardlink.del_rorp(repo_rorp)
+++	return verify_sha1
+++
++ def print_reports(report_iter):
++ 	"""Given an iter of CompareReport objects, print them to screen"""
++ 	assert not Globals.server
++@@ -199,12 +213,13 @@
++ 		"""Like above, but also compare sha1 sums of any regular files"""
++ 		def hashes_changed(src_rp, mir_rorp):
++ 			"""Return 0 if their data hashes same, 1 otherwise"""
++-			if not mir_rorp.has_sha1():
+++			verify_sha1 = get_hash(mir_rorp)
+++			if not verify_sha1:
++ 				log.Log("Warning: Metadata file has no digest for %s, "
++ 						"unable to compare." % (mir_rorp.get_indexpath(),), 2)
++ 				return 0
++ 			elif (src_rp.getsize() == mir_rorp.getsize() and
++-				  hash.compute_sha1(src_rp) == mir_rorp.get_sha1()):
+++				  hash.compute_sha1(src_rp) == verify_sha1):
++ 				return 0
++ 			return 1
++ 
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/patches/series ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/series
+--- ../rdiff-backup-1.2.8/debian/patches/series	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/patches/series	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,3 @@
++01_fix_restricted_test-server_option.diff
++02_python_2.6_deprecationwarning.diff
++03_fix_hardlinks.diff
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/rdiff-backup.docs ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.docs
+--- ../rdiff-backup-1.2.8/debian/rdiff-backup.docs	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.docs	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,3 @@
++FAQ.html
++README
++examples.html
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/rdiff-backup.manpages ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.manpages
+--- ../rdiff-backup-1.2.8/debian/rdiff-backup.manpages	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.manpages	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1 @@
++rdiff-backup.1
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/rdiff-backup.README.Debian ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.README.Debian
+--- ../rdiff-backup-1.2.8/debian/rdiff-backup.README.Debian	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rdiff-backup.README.Debian	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,8 @@
++rdiff-backup for Debian
++-----------------------
++
++Note: rdiff-backup *depends* on a filesystem capable of long-filenames on the
++      target-side. If you want to backup onto a Windows filesystems, you have to
++      mount them as vfat.
++
++ -- Daniel Baumann <daniel@debian.org>  Mon, 28 Nov 2005 09:21:00 +0100
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/README.source ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/README.source
+--- ../rdiff-backup-1.2.8/debian/README.source	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/README.source	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,38 @@
++This package uses dpatch to manage all modifications to the upstream
++source. Changes are stored in the source package as diffs in
++debian/patches and applied during the build.
++
++To get the fully patched source after unpacking the source package, cd
++to the root level of the source package and run:
++
++    debian/rules patch
++
++Removing a patch is as simple as removing its entry from the
++debian/patches/00list file, and please also remove the patch file
++itself.
++
++Creating a new patch is done with "dpatch-edit-patch patch XX_patchname"
++where you should replace XX with a new number and patchname with a
++descriptive shortname of the patch. You can then simply edit all the
++files your patch wants to edit, and then simply "exit 0" from the shell
++to actually create the patch file.
++
++To tweak an already existing patch, call "dpatch-edit-patch XX_patchname"
++and replace XX_patchname with the actual filename from debian/patches
++you want to use.
++
++To clean up afterwards again, "debian/rules unpatch" will do the
++work for you - or you can of course choose to call
++"fakeroot debian/rules clean" all together.
++
++
++--- 
++
++this documentation is part of dpatch package, and may be used by
++packages using dpatch to comply with policy on README.source. This
++documentation is meant to be useful to users who are not proficient in
++dpatch in doing work with dpatch-based packages. Please send any
++improvements to the BTS of dpatch package.
++
++original text by Gerfried Fuchs, edited by Junichi Uekawa <dancer@debian.org>
++10 Aug 2008.
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/rules ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rules
+--- ../rdiff-backup-1.2.8/debian/rules	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/rules	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,11 @@
++#!/usr/bin/make -f
++
++%:
++	dh $@ --with python2
++
++override_dh_install:
++	install -D -m 0644 debian/local/bash-completion debian/rdiff-backup/etc/bash_completion.d/rdiff-backup
++
++	# Removing useless files
++	rm -rf debian/rdiff-backup/usr/share/doc/rdiff-backup-*
++
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/source/format ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/source/format
+--- ../rdiff-backup-1.2.8/debian/source/format	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/source/format	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1 @@
++3.0 (quilt)
+diff --new-file -aur ../rdiff-backup-1.2.8/debian/watch ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/watch
+--- ../rdiff-backup-1.2.8/debian/watch	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/debian/watch	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,2 @@
++version=3
++http://savannah.nongnu.org/download/rdiff-backup/ rdiff-backup-(1.2.*)\.tar.gz
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/compare.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/compare.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/compare.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/compare.py	2014-12-08 15:24:13.000000000 -0500
+@@ -25,7 +25,7 @@
+ """
  
-@@ -206,6 +207,7 @@ def normalize_path(path):
- 		elif opt == "-V" or opt == "--version":
- 			print "rdiff-backup " + Globals.version
- 			sys.exit(0)
-+		elif opt == "--no-fsync": Globals.do_fsync = False
- 		else: Log.FatalError("Unknown option %s" % opt)
- 	Log("Using rdiff-backup version %s" % (Globals.version), 4)
+ from __future__ import generators
+-import Globals, restore, rorpiter, log, backup, static, rpath, hash, robust
++import Globals, restore, rorpiter, log, backup, static, rpath, hash, robust, Hardlink
  
-@@ -534,8 +536,8 @@ def backup_remove_curmirror_local():
- 	if curmir_incs[0].getinctime() < curmir_incs[1].getinctime():
- 		older_inc = curmir_incs[0]
- 	else: older_inc = curmir_incs[1]
--
--	C.sync() # Make sure everything is written before curmirror is removed
-+	if Globals.do_fsync:
-+		C.sync() # Make sure everything is written before curmirror is removed
- 	older_inc.delete()
+ def Compare(src_rp, mirror_rp, inc_rp, compare_time):
+ 	"""Compares metadata in src_rp dir with metadata in mirror_rp at time"""
+@@ -80,14 +80,15 @@
+ 	bad_files = 0
+ 	for repo_rorp in repo_iter:
+ 		if not repo_rorp.isreg(): continue
+-		if not repo_rorp.has_sha1():
++		verify_sha1 = get_hash(repo_rorp)
++		if not verify_sha1:
+ 			log.Log("Warning: Cannot find SHA1 digest for file %s,\n"
+ 					"perhaps because this feature was added in v1.1.1"
+ 					% (repo_rorp.get_indexpath(),), 2)
+ 			continue
+ 		fp = RepoSide.rf_cache.get_fp(base_index + repo_rorp.index, repo_rorp)
+ 		computed_hash = hash.compute_sha1_fp(fp)
+-		if computed_hash == repo_rorp.get_sha1():
++		if computed_hash == verify_sha1:
+ 			log.Log("Verified SHA1 digest of " + repo_rorp.get_indexpath(), 5)
+ 		else:
+ 			bad_files += 1
+@@ -95,11 +96,24 @@
+ 					"doesn't match recorded digest of\n   %s\n"
+ 					"Your backup repository may be corrupted!" %
+ 					(repo_rorp.get_indexpath(), computed_hash,
+-					 repo_rorp.get_sha1()), 2)
++					 verify_sha1), 2)
+ 	RepoSide.close_rf_cache()
+ 	if not bad_files: log.Log("Every file verified successfully.", 3)
+ 	return bad_files
  
++def get_hash (repo_rorp):
++	""" Try to get a sha1 digest from the repository.  If hardlinks 
++	are saved in the metadata, get the sha1 from the first hardlink """
++	Hardlink.add_rorp(repo_rorp)
++	if Hardlink.islinked(repo_rorp):
++		verify_sha1 = Hardlink.get_sha1(repo_rorp)
++	elif repo_rorp.has_sha1():
++		verify_sha1 = repo_rorp.get_sha1()
++	else:
++		verify_sha1 = None
++	Hardlink.del_rorp(repo_rorp)
++	return verify_sha1
++
+ def print_reports(report_iter):
+ 	"""Given an iter of CompareReport objects, print them to screen"""
+ 	assert not Globals.server
+@@ -199,12 +213,13 @@
+ 		"""Like above, but also compare sha1 sums of any regular files"""
+ 		def hashes_changed(src_rp, mir_rorp):
+ 			"""Return 0 if their data hashes same, 1 otherwise"""
+-			if not mir_rorp.has_sha1():
++			verify_sha1 = get_hash(mir_rorp)
++			if not verify_sha1:
+ 				log.Log("Warning: Metadata file has no digest for %s, "
+ 						"unable to compare." % (mir_rorp.get_indexpath(),), 2)
+ 				return 0
+ 			elif (src_rp.getsize() == mir_rorp.getsize() and
+-				  hash.compute_sha1(src_rp) == mir_rorp.get_sha1()):
++				  hash.compute_sha1(src_rp) == verify_sha1):
+ 				return 0
+ 			return 1
  
-diff --git a/rdiff-backup/rdiff_backup/regress.py b/rdiff-backup/rdiff_backup/regress.py
-index 4d7b6b6e3..900aaeb77 100644
---- a/rdiff-backup/rdiff_backup/regress.py
-+++ b/rdiff-backup/rdiff_backup/regress.py
-@@ -71,7 +71,8 @@ def Regress(mirror_rp):
- 	for rf in iterate_meta_rfs(mirror_rp, inc_rpath): ITR(rf.index, rf)
- 	ITR.Finish()
- 	if former_current_mirror_rp:
--		C.sync() # Sync first, since we are marking dest dir as good now
-+		if Globals.do_fsync:
-+			C.sync() # Sync first, since we are marking dest dir as good now
- 		former_current_mirror_rp.delete()
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/Globals.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Globals.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/Globals.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Globals.py	2014-12-08 15:24:13.000000000 -0500
+@@ -225,6 +225,9 @@
+ # guarantee that any changes have been committed to disk.
+ fsync_directories = None
  
- def set_regress_time():
-diff --git a/rdiff-backup/rdiff_backup/rpath.py b/rdiff-backup/rdiff_backup/rpath.py
-index c10897693..2163d6ac1 100644
---- a/rdiff-backup/rdiff_backup/rpath.py
-+++ b/rdiff-backup/rdiff_backup/rpath.py
-@@ -1284,8 +1284,9 @@ def fsync(self, fp = None):
++# If set, not a single fsync() call will be made.
++no_fsync = 0
++
+ # If set, exit with error instead of dropping ACLs or ACL entries.
+ never_drop_acls = None
+ 
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/Hardlink.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Hardlink.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/Hardlink.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Hardlink.py	2014-12-08 15:24:13.000000000 -0500
+@@ -95,7 +95,13 @@
+ 		src_rorp.getnumlinks() == dest_rorp.getnumlinks() == 1):
+ 		return 1 # Hard links don't apply
+ 
+-	if src_rorp.getnumlinks() < dest_rorp.getnumlinks(): return 0
++	"""The sha1 of linked files is only stored in the metadata of the first 
++	linked file on the dest side.  If the first linked file on the src side is
++	deleted, then the sha1 will also be deleted on the dest side, so we test for this
++	& report not equal so that another sha1 will be stored with the next linked
++	file on the dest side"""
++	if (not islinked(src_rorp) and not dest_rorp.has_sha1()): return 0
++	if src_rorp.getnumlinks() != dest_rorp.getnumlinks(): return 0
+ 	src_key = get_inode_key(src_rorp)
+ 	index, remaining, dest_key, digest = _inode_index[src_key]
+ 	if dest_key == "NA":
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/Main.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Main.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/Main.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/Main.py	2014-12-08 15:24:13.000000000 -0500
+@@ -77,6 +77,7 @@
+ 		  "list-increment-sizes", "never-drop-acls",
+ 		  "max-file-size=", "min-file-size=",
+ 		  "no-acls", "no-carbonfile",
++		  "no-fsync",
+ 		  "no-compare-inode", "no-compression", "no-compression-regexp=",
+ 		  "no-eas", "no-file-statistics", "no-hard-links", "null-separator",
+ 		  "override-chars-to-quote=", "parsable-output",
+@@ -167,6 +168,7 @@
+ 			Globals.set("no_compression_regexp_string", arg)
+ 		elif opt == "--no-eas": Globals.set("eas_active", 0)
+ 		elif opt == "--no-file-statistics": Globals.set('file_statistics', 0)
++		elif opt == "--no-fsync": Globals.set("no_fsync", 1)
+ 		elif opt == "--no-hard-links": Globals.set('preserve_hardlinks', 0)
+ 		elif opt == "--null-separator": Globals.set("null_separator", 1)
+ 		elif opt == "--override-chars-to-quote":
+@@ -288,7 +290,7 @@
+ 	elif action == "remove-older-than": RemoveOlderThan(rps[0])
+ 	elif action == "restore": Restore(*rps)
+ 	elif action == "restore-as-of": Restore(rps[0], rps[1], 1)
+-	elif action == "test-server": SetConnections.TestConnections()
++	elif action == "test-server": SetConnections.TestConnections(rps)
+ 	elif action == "verify": Verify(rps[0])
+ 	else: raise AssertionError("Unknown action " + action)
+ 
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/rpath.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/rpath.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/rpath.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/rpath.py	2014-12-08 15:24:13.000000000 -0500
+@@ -1273,6 +1273,8 @@
  		This can be useful for directories.
  
  		"""
--		if not fp: self.conn.rpath.RPath.fsync_local(self)
--		else: os.fsync(fp.fileno())
-+		if Globals.do_fsync:
-+			if not fp: self.conn.rpath.RPath.fsync_local(self)
-+			else: os.fsync(fp.fileno())
++		if Globals.no_fsync:
++			return
+ 		if not fp: self.conn.rpath.RPath.fsync_local(self)
+ 		else: os.fsync(fp.fileno())
  
- 	def fsync_local(self, thunk = None):
- 		"""fsync current file, run locally
-@@ -1294,6 +1295,7 @@ def fsync_local(self, thunk = None):
- 		the file's file descriptor.
+@@ -1284,6 +1286,8 @@
  
  		"""
-+		assert Globals.do_fsync
  		assert self.conn is Globals.local_connection
++		if Globals.no_fsync:
++			return
  		try:
  			fd = os.open(self.path, os.O_RDONLY)
-
-From c512a9ef75334d4b3dfdbfc6e2b63fe6af3c80f2 Mon Sep 17 00:00:00 2001
-From: Jiri Lunacek <jiri.lunacek@hosting90.cz>
-Date: Wed, 18 Sep 2019 14:15:02 +0200
-Subject: [PATCH 2/2] Print slash on directories
-
----
- rdiff-backup/rdiff_backup/Main.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/rdiff-backup/rdiff_backup/Main.py b/rdiff-backup/rdiff_backup/Main.py
-index 3935b0889..5990f78d0 100644
---- a/rdiff-backup/rdiff_backup/Main.py
-+++ b/rdiff-backup/rdiff_backup/Main.py
-@@ -819,7 +819,7 @@ def ListAtTime(rp):
- 	mirror_rp = restore_root.new_index(restore_index)
- 	inc_rp = mirror_rp.append_path("increments", restore_index)
- 	for rorp in rp.conn.restore.ListAtTime(mirror_rp, inc_rp, rest_time):
--		print rorp.get_indexpath()
-+		print rorp.get_indexpath() + ('/' if rorp.isdir() else '')
- 	
+ 			os.fsync(fd)
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff_backup/SetConnections.py ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/SetConnections.py
+--- ../rdiff-backup-1.2.8/rdiff_backup/SetConnections.py	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff_backup/SetConnections.py	2014-12-08 15:24:13.000000000 -0500
+@@ -135,10 +135,10 @@
+ 	if not remote_cmd: return Globals.local_connection
  
- def Compare(compare_type, src_rp, dest_rp, compare_time = None):
+ 	Log("Executing " + remote_cmd, 4)
+-	if os.name == "nt":
++	if map(int, sys.version.split()[0].split('.')[:2]) >= [2, 6]:
+ 		import subprocess
+ 		try:
+-			process = subprocess.Popen(remote_cmd, shell=False, bufsize=0,
++			process = subprocess.Popen(remote_cmd, shell=True, bufsize=0,
+ 								stdin=subprocess.PIPE, 
+ 								stdout=subprocess.PIPE)
+ 			(stdin, stdout) = (process.stdin, process.stdout)
+@@ -241,20 +241,25 @@
+ 	Globals.backup_reader = Globals.isbackup_reader = \
+ 		  Globals.backup_writer = Globals.isbackup_writer = None
+ 
+-def TestConnections():
++def TestConnections(rpaths):
+ 	"""Test connections, printing results"""
+ 	if len(Globals.connections) == 1: print "No remote connections specified"
+ 	else:
+-		for i in range(1, len(Globals.connections)): test_connection(i)
++		assert len(Globals.connections) == len(rpaths) + 1
++		for i in range(1, len(Globals.connections)):
++			test_connection(i, rpaths[i-1])
+ 
+-def test_connection(conn_number):
++def test_connection(conn_number, rp):
+ 	"""Test connection.  conn_number 0 is the local connection"""
+ 	print "Testing server started by: ", __conn_remote_cmds[conn_number]
+ 	conn = Globals.connections[conn_number]
+ 	try:
+ 		assert conn.Globals.get('current_time') is None
+-		assert type(conn.os.listdir('.')) is list
+ 		version = conn.Globals.get('version')
++		try:
++			assert type(conn.os.getuid()) is int
++		except AttributeError: # Windows doesn't support os.getuid()
++			assert type(conn.os.listdir(rp.path)) is list
+ 	except:
+ 		sys.stderr.write("Server tests failed\n")
+ 		raise
+diff --new-file -aur ../rdiff-backup-1.2.8/rdiff-backup.1 ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff-backup.1
+--- ../rdiff-backup-1.2.8/rdiff-backup.1	2009-03-16 10:36:21.000000000 -0400
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/rdiff-backup.1	2014-12-08 15:24:13.000000000 -0500
+@@ -345,6 +345,14 @@
+ rdiff-backup-data directory.  rdiff-backup will run slightly quicker
+ and take up a bit less space.
+ .TP
++.B \-\-no-fsync
++Avoid all calls to
++.BR fsync (2).
++In case of unexpected power-loss this could result in a broken backup
++repository. Only use this if you are absolutely sure the machine(s)
++running rdiff-backup will not crash or if you can live with a broken
++backup repository.
++.TP
+ .BI \-\-no-hard-links
+ Don't replicate hard links on destination side.  If many hard-linked
+ files are present, this option can drastically decrease memory usage.
+diff --new-file -aur ../rdiff-backup-1.2.8/tests/fsync_test.sh ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/tests/fsync_test.sh
+--- ../rdiff-backup-1.2.8/tests/fsync_test.sh	1969-12-31 19:00:00.000000000 -0500
++++ ../rdiff-backup-61437a7fe32dfb30369de444e3f629a2f46212a5/tests/fsync_test.sh	2014-12-08 15:24:13.000000000 -0500
+@@ -0,0 +1,56 @@
++#!/bin/bash
++
++source_dir=rdiff_backup_test_source
++
++run_test() {
++    RDIFF_BACKUP=rdiff-backup
++    if [[ ${1-} ]]; then
++        RDIFF_BACKUP="rdiff-backup $1"
++    fi
++    rm -rf "$source_dir" "$source_dir"_rdiff_backup
++    mkdir "$source_dir"
++    touch "$source_dir/file"{0..1000} "$source_dir/empty"
++    echo "Initial backup..."
++    time $RDIFF_BACKUP "$source_dir" "$source_dir"_rdiff_backup
++    rm "$source_dir/file"*
++    sleep 1
++    echo -e "\nIncremental backup after deleting all files..."
++    time $RDIFF_BACKUP "$source_dir" "$source_dir"_rdiff_backup
++    rm -rf "$source_dir" "$source_dir"_rdiff_backup
++}
++
++run_test
++echo -e "\nNow without fsync."
++run_test --no-fsync
++
++exit 0
++
++<<COMMENT
++Expected result on a system with slow fsync():
++
++$ ./fsync_test.sh
++Initial backup...
++
++real	0m1.155s
++user	0m0.420s
++sys	0m0.090s
++
++Incremental backup after deleting all files...
++
++real	2m5.187s
++user	0m2.200s
++sys	0m0.680s
++
++Now without fsync.
++Initial backup...
++
++real	0m0.421s
++user	0m0.320s
++sys	0m0.090s
++
++Incremental backup after deleting all files...
++
++real	0m1.093s
++user	0m0.620s
++sys	0m0.100s
++COMMENT
