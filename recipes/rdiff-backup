@@ -11,6 +11,7 @@ _build() {
     curl -O -L  http://ftp.twaren.net/Unix/NonGNU/rdiff-backup/rdiff-backup-${ver}.tar.gz
     tar xzf rdiff-backup-${ver}.tar.gz
     cd rdiff-backup-${ver}
+    patch -p1 < ${_recdir}/files/rdiff-backup--popen2.patch
     python setup.py install --prefix $SPM_PREFIX
 }
 
