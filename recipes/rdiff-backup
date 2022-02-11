@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=rdiff-backup
-ver="${ver:-1.3.3}"
+ver="${ver:-1.2.8}"
 rel=1
 grp=base
 dep=(librsync0 python2)
