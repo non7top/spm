@@ -15,7 +15,7 @@ _build() {
     # 61437a7fe32dfb30369de444e3f629a2f46212a5.tar.gz 
     # ok, debian it is
     # https://github.com/rdiff-backup/rdiff-backup/pull/41
-    patch -p1 < ${_recdir}/files/rdiff-backup-nofsync.patch
+    patch -p2 < ${_recdir}/files/rdiff-backup-nofsync.patch
     python setup.py install --prefix $SPM_PREFIX
 }
 
