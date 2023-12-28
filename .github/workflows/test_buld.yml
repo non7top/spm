@@ -7,9 +7,11 @@ jobs:
     test_python:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v4
             - run: ./spm install openssl
             - run: ./spm install python3
     test_notary:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v4
             - run: ./spm install notary
