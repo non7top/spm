@@ -9,6 +9,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - run: ./spm install openssl
+            - run: ./spm install curl
             - run: ./spm install python3
             - run: ./spm install openssh
             - run: ./spm install notary
