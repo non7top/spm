@@ -13,7 +13,7 @@ _build() {
     cd ${pkg}-${ver}
     CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX --with-privsep-path=$SPM_PREFIX
     make ssh
-    make -s install
+    make -s install ssh
 }
 
 _list() {
