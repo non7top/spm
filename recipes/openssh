@@ -12,7 +12,7 @@ _build() {
     tar xzf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
     CFLAGS="$CFLAGS -fPIC" PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --prefix=$SPM_PREFIX
-    make V=1
+    make ssh
     make -s install
 }
 
