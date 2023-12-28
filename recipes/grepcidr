@@ -1,0 +1,26 @@
+#!/bin/bash
+pkg=grepcidr
+ver="${ver:-2.0}"
+rel=1
+grp=base
+dep=()
+src=(http://www.pc-tools.net/files/unix/grepcidr-${ver}.tar.gz)
+sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
+
+_build() {
+    # their site has broken cert chain
+    curl -O -L -k http://www.pc-tools.net/files/unix/${pkg}-${ver}.tar.gz
+    tar xf ${pkg}-${ver}.tar.gz
+    cd ${pkg}-${ver}
+
+    #make configure
+    #./configure --prefix=$SPM_PREFIX
+    make
+    make install DESTDIR=$SPM_PREFIX PREFIX=
+}
+
+_list() {
+    hash -r
+    echo ">> $pkg version"
+    $pkg -V
+}
