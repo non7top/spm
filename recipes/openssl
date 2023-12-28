@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=openssl
-ver="${ver:-1.1.1d}"
+ver="${ver:-3.2.0}"
 rel=1
 grp=base
 dep=(zlib)
@@ -17,7 +17,7 @@ _build() {
         enable-rc5 enable-asm \
         no-rfc3779 no-sctp \
         no-ssl2 no-ssl3 enable-heartbeats \
-        enable-zlib --prefix=$SPM_PREFIX shared threads  -I${SPM_PREFIX}/include -L$SPM_PREFIX/lib
+        enable-zlib --prefix=$SPM_PREFIX --openssldir=$SPM_PREFIX shared threads  -I${SPM_PREFIX}/include -L$SPM_PREFIX/lib
     #-I${_bootstrap}/usr/include -I${SPM_PREFIX}/include -L${_bootstrap}/usr/lib64 -L$SPM_PREFIX/lib
     make
     make -s install_sw
