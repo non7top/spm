@@ -11,8 +11,4 @@ jobs:
             - run: ./spm install openssl
             - run: ./spm install python3
             - run: ./spm install openssh
-    test_notary:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
             - run: ./spm install notary
