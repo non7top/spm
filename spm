@@ -74,7 +74,7 @@ install() {
     unset pkg ver rel grp mkd bak opt src sha
     source local.env
     source ${_recdir}/$_pkg
-        ( 
+        (
         unset pkg ver rel grp mkd bak opt src sha
         for i in ${dep[@]}; do
             install $i || exit 1
@@ -92,7 +92,7 @@ install() {
         res=$?
         cd $_d
           if [ $res -ne 0 ]; then
-            echo "Building $pkg $ver failed"
+            echo -e "${RED}X>> Building $pkg $ver failed${RESTORE}"
             echo "Temp dir is ${__tmp}"
             exit 1
           fi
