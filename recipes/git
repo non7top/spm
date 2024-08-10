@@ -12,6 +12,8 @@ _build() {
     curl --insecure -O -L --cacert $SPM_PREFIX/ssl/cert.pem https://github.com/git/git/archive/v${ver}.tar.gz
     tar xzf v${ver}.tar.gz
     cd ${pkg}-${ver}
+    #export CXXFLAGS="$CXXFLAGS -std=c++14"
+    #export CFLAGS="$CFLAGS -std=c++14"
     make configure
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
         ./configure --prefix=$SPM_PREFIX   \
