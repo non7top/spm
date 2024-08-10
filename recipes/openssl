@@ -19,7 +19,7 @@ _build() {
         no-ssl2 no-ssl3 enable-heartbeats \
         enable-zlib --prefix=$SPM_PREFIX --openssldir=$SPM_PREFIX --libdir=lib shared threads  -I${SPM_PREFIX}/include -L$SPM_PREFIX/lib
     #-I${_bootstrap}/usr/include -I${SPM_PREFIX}/include -L${_bootstrap}/usr/lib64 -L$SPM_PREFIX/lib
-    make
+    make -s
     make -s install_sw
 }
 
