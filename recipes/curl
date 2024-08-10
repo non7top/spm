@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=curl
-ver="${ver:-8.5.0}"
+ver="${ver:-8.9.1}"
 rel=1
 grp=base
 dep=(openssl zlib libidn2 ca-bundle nghttp2)

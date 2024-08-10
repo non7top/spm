@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=git
-ver="${ver:-2.25.1}"
+ver="${ver:-2.46.0}"
 rel=1
 grp=base
 dep=(openssl zlib ca-bundle expat gettext)

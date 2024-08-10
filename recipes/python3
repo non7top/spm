@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=python3
-ver="${ver:-3.10.13}"
+ver="${ver:-3.12.5}"
 rel=1
 grp=base
 dep=(openssl zlib curl libffi sqlite3 bzip2)
