@@ -15,13 +15,14 @@ _build() {
     cd $SPM_PREFIX/go${ver}/src
 
     export CGO_ENABLED=1
-    mkdir -p $GOPATH
-    mkdir -p $GOROOT
+    #mkdir -p $GOPATH
+    #mkdir -p $GOROOT
     ./make.bash
 }
 
 _list() {
     hash -r
     echo ">> $pkg version"
+    export GOROOT=$SPM_PREFIX/go${ver}
     $SPM_PREFIX/go${ver}/bin/go version
 }

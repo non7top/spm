@@ -17,6 +17,7 @@ _build() {
     export LDFLAGS="$LDFLAGS -fPIC"
 
     ./configure --silent --prefix=$SPM_PREFIX --enable-shared
+    make -s
     make -s install
 }
 

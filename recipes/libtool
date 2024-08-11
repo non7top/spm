@@ -12,6 +12,7 @@ _build() {
     tar xf ${pkg}-${ver}.tar.xz
     cd ${pkg}-${ver}
     ./configure --silent --prefix=$SPM_PREFIX --enable-shared
+    make -s
     make -s install
 }
 

@@ -13,7 +13,7 @@ _build() {
     cd ${pkg}-${ver}
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
         ./configure --prefix=$SPM_PREFIX --with-ca-bundle=$SPM_PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn2 --with-nghttp2 --enable-alt-svc
-    make V=1
+    make -s
     make -s install
 }
 
