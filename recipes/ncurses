@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=ncurses
-ver="${ver:-6.0}"
+ver="${ver:-6.5}"
 rel=1
 grp=base
 dep=()
@@ -16,7 +16,8 @@ _build() {
     export CXXFLAGS="$CXXFLAGS -fPIC"
     export LDFLAGS="$LDFLAGS -fPIC"
 
-    ./configure --silent --prefix=$SPM_PREFIX --enable-shared 
+    ./configure --silent --prefix=$SPM_PREFIX --enable-shared
+    make -s
     make -s install
 }
 

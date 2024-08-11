@@ -6,7 +6,7 @@ _recdir=$( readlink -f ./recipes )
 
 __conf_dir=${_basedir}/.spm/
 _list=${__conf_dir}/list
-__tmp=$(mktemp -d)
+__tmp=$(mktemp -d -t spm.XXXXXXXXXX)
 
 mkdir -p ${_basedir} ${__conf_dir}
 
@@ -74,7 +74,7 @@ install() {
     unset pkg ver rel grp mkd bak opt src sha
     source local.env
     source ${_recdir}/$_pkg
-        ( 
+        (
         unset pkg ver rel grp mkd bak opt src sha
         for i in ${dep[@]}; do
             install $i || exit 1
@@ -92,8 +92,8 @@ install() {
         res=$?
         cd $_d
           if [ $res -ne 0 ]; then
-            echo "Building $pkg $ver failed"
-            echo "Temp dir is ${__tmp}"
+            echo -e " ${RED}X>> Building $pkg $ver failed${RESTORE}"
+            echo -e " ${LCYAN}>> Temp dir is ${__tmp}${RESTORE}"
             exit 1
           fi
 

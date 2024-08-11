@@ -2,6 +2,8 @@ name: Test Builds
 on:
     push:
     workflow_dispatch:
+    schedule:
+        - cron:  '27 15 * * 3'
 
 jobs:
     build:
@@ -11,7 +13,5 @@ jobs:
             - run: ./spm install openssl
             - run: ./spm install curl
             - run: ./spm install python3
-            - run: ./spm install openssh
-            - run: ./spm install notary
             - run: ./spm install git
-            - run: ./spm install golang119
+            - run: ./spm install golang122

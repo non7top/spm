@@ -1,24 +1,28 @@
 #!/bin/bash
-pkg=golang119
-ver="${ver:-1.19.5}"
+pkg=golang122
+ver="${ver:-1.22.6}"
 rel=1
 grp=base
-dep=(golang14)
+dep=(golang120)
 src=(https://github.com/stedolan/jq/releases/download/jq-${ver}/jq-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    set -x
     curl -L -O https://dl.google.com/go/go${ver}.src.tar.gz
     tar xzf go${ver}.src.tar.gz
     rm -rf $SPM_PREFIX/go${ver}
-    mv -vT go $SPM_PREFIX/go${ver}
-    #mv -v goroot $SPM_PREFIX/
-    cd $SPM_PREFIX/go${ver}/src
+    mv -vT go go${ver}
+    p=$(pwd)
+    cd go${ver}/src
 
-    export GOFLAGS="$GOFLAGS -buildvcs=false"
+    final=$SPM_PREFIX/go${ver}
 
-    GOROOT_BOOTSTRAP=$SPM_PREFIX/go1.4-bootstrap-20171003 ./make.bash
+    export GOROOT_FINAL="${final}"
+    export GOROOT_BOOTSTRAP=$SPM_PREFIX/go1.20.14
+    ./make.bash
+
+    cd "$p"
+    mv go${ver} $SPM_PREFIX/go${ver}
 }
 
 _list() {

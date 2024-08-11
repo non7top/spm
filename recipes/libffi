@@ -15,12 +15,12 @@ _build() {
     export ACLOCAL_PATH="/home/test/local/share/aclocal/"
     export ACLOCAL_FLAGS="-I /home/test/local/share/aclocal/"
 
-    libtoolize -i -c
+    libtoolize -i -c --quiet
     aclocal --verbose
     ./autogen.sh --prefix=$SPM_PREFIX
 
-    ./configure --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory --disable-docs
-    make install
+    ./configure --silent --prefix=$SPM_PREFIX --libdir=$SPM_PREFIX/lib --disable-multi-os-directory --disable-docs
+    make -s install
 }
 
 _list() {
