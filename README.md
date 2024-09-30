@@ -1,4 +1,4 @@
-# spm [![Build Status](https://travis-ci.org/non7top/spm.svg?branch=master)](https://travis-ci.org/non7top/spm)
+# spm [![Test Builds](https://github.com/non7top/spm/actions/workflows/test_buld.yml/badge.svg)](https://github.com/non7top/spm/actions/workflows/test_buld.yml)
 Simple package manager
 
 # Install
