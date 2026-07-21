@@ -37,6 +37,10 @@ list_available() {
     ls -1 ${_recdir}
 }
 
+list_installed() {
+    cat ${_list} 2> /dev/null
+}
+
 _record_installed() {
     local _pkg=$1
     local _ver=$2
@@ -107,5 +111,5 @@ case $action in
     list_available|list)     list_available ;;
     list_installed)     list_installed ;;
     install)            install $2 ;;
-    *)                  echo "Unknown action: $a"; exit 1; ;;
+    *)                  echo "Unknown action: $action"; exit 1; ;;
 esac
