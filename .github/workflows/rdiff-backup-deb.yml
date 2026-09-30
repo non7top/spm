@@ -66,6 +66,8 @@ jobs:
           name: deb
           path: dist
       - run: ./debian/verify-install.sh
+        env:
+          DIST: ${{ github.workspace }}/dist
 
   publish:
     if: github.event_name == 'workflow_dispatch' && inputs.publish

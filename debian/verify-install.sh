@@ -4,7 +4,7 @@ set -eu
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y -qq /dist/*.deb
+apt-get install -y -qq "${DIST:-/dist}"/*.deb
 
 RD=/usr/local/rdiff-backup/bin/rdiff-backup
 $RD --version | grep -qx 'rdiff-backup 1.2.8'
