@@ -1,0 +1,113 @@
+name: rdiff-backup-deb
+
+on:
+  pull_request:
+    paths:
+      - recipes/rdiff-backup
+      - recipes/python2
+      - recipes/librsync0
+      - recipes/openssl
+      - recipes/zlib
+      - recipes/curl
+      - recipes/files/rdiff-backup-nofsync.patch
+      - debian/**
+      - spm
+      - local.env
+      - .github/actions/spm-install/**
+      - .github/workflows/rdiff-backup-deb.yml
+  # Builds, signs and publishes: a GitHub release with the .deb, plus the
+  # sigstore-signed apt repo on the apt-repo branch.
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Sign and publish a release (otherwise build and verify only)"
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    # Oldest supported Ubuntu, so the bundle links against the oldest glibc
+    # it will meet (runs unchanged on newer releases).
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/spm-install
+        with:
+          packages: rdiff-backup
+
+      - name: Package
+        run: ./debian/build.sh
+
+      - name: Version
+        id: version
+        run: echo "version=$(bash -c 'source recipes/rdiff-backup && echo "${ver}-${rel}"')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: dist/*.deb
+
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ["ubuntu:22.04", "ubuntu:24.04", "ubuntu:26.04"]
+    container: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: debian/verify-install.sh
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: dist
+      - run: ./debian/verify-install.sh
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    needs: [build, verify]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # Keyless apt-cosign-sign signing exchanges this job's OIDC token for a
+      # short-lived Fulcio cert - no signing key ever touches the repo.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: dist
+
+      - name: Fetch and verify apt-cosign-sign
+        id: apt-cosign-sign
+        uses: non7top/apt-cosign/.github/actions/fetch-apt-cosign-sign@v0.8.0
+        with:
+          version: '0.8.0'
+          github-token: ${{ github.token }}
+
+      - name: Sign the .deb
+        run: ${{ steps.apt-cosign-sign.outputs.bin-path }} dist/*.deb
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: rdiff-backup-spm-${{ needs.build.outputs.version }}
+          files: |
+            dist/*.deb
+            dist/*.deb.sigstore
+          generate_release_notes: true
+
+      - name: Stage, sign, and publish the apt repo
+        uses: non7top/apt-cosign/.github/actions/publish-apt-repo@v0.8.0
+        with:
+          sign-bin: ${{ steps.apt-cosign-sign.outputs.bin-path }}
+          origin: spm
+          description: "spm-built packages (sigstore-verified, no GPG signature)"
+          commit-message: "apt-repo: rdiff-backup-spm ${{ needs.build.outputs.version }}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
