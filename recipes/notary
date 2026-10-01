@@ -9,8 +9,7 @@ sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
     curl -L -O https://github.com/danwent/Perspectives-Server/archive/master.tar.gz
-    cd 
-    tar xf  $__tmp/master.tar.gz
+    tar xf master.tar.gz
     mv Perspectives-Server-master Perspectives-Server
     chmod +x Perspectives-Server/admin/*.sh
 }
