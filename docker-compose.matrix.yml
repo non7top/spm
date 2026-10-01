@@ -1,0 +1,15 @@
+services:
+  jammy:
+    image: ubuntu:22.04
+    volumes: &v
+      - ./dist:/dist:ro
+      - ./debian/verify-install.sh:/verify-install.sh:ro
+    command: /verify-install.sh
+  noble:
+    image: ubuntu:24.04
+    volumes: *v
+    command: /verify-install.sh
+  resolute:
+    image: ubuntu:26.04
+    volumes: *v
+    command: /verify-install.sh

@@ -1,0 +1,33 @@
+name: spm install
+description: >
+  Prepares a build environment with spm: creates the prefix, then runs
+  `./spm install` for each requested package from this repo's recipes.
+
+inputs:
+  packages:
+    description: Space-separated recipe names, e.g. "rdiff-backup".
+    required: true
+  prefix:
+    description: Install prefix (SPM_PREFIX). Created and made writable by the runner user.
+    required: false
+    default: /usr/local/rdiff-backup
+
+runs:
+  using: composite
+  steps:
+    - name: Create the prefix
+      shell: bash
+      run: |
+        sudo mkdir -p "${{ inputs.prefix }}"
+        sudo chown "$(id -u):$(id -g)" "${{ inputs.prefix }}"
+
+    - name: spm install
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../..
+      env:
+        SPM_PREFIX: ${{ inputs.prefix }}
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        for p in $PACKAGES; do
+          ./spm install "$p"
+        done

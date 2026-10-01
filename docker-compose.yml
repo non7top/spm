@@ -1,0 +1,13 @@
+services:
+  dev:
+    build: .
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    working_dir: /app
+    environment:
+      - SPM_PREFIX=/usr/local/rdiff-backup
+    volumes:
+      - .:/app
+      - prefix:/usr/local/rdiff-backup
+
+volumes:
+  prefix:
