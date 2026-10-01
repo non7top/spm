@@ -1,0 +1,11 @@
+Origin: spm
+Label: spm
+Suite: stable
+Codename: stable
+Architectures: amd64
+Components: main
+Description: spm-built packages (sigstore-verified, no GPG signature)
+Date: Thu, 01 Oct 2026 00:20:36 +0000
+SHA256:
+ 783ea863acf5f23d0d8e3cc69d4b4521762536dfaf92db647e8c6be4bdbee56d 783 Packages
+ 4e21b2904c5a00f77e3d01864067ce9d80951d3c061d61d7c854ff2539728c72 532 Packages.gz

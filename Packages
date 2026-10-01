@@ -1,0 +1,18 @@
+Package: rdiff-backup-spm
+Version: 1.2.8-1
+Architecture: amd64
+Maintainer: Vladimir Berezhnoy <non7top@gmail.com>
+Filename: ./rdiff-backup-spm_1.2.8-1_amd64.deb
+Size: 26776138
+MD5sum: 20b60da887605772a3da2f96674a24ae
+SHA1: 27de929596281bb1c3f00643738d498f0a0a08d8
+SHA256: 1eb43ff678062c881cfa786e1105ec46617576e88afb52b7f5da75c39ed3f3e4
+Section: admin
+Priority: optional
+Description: rdiff-backup 1.2.8 (no-fsync patched) with a private Python 2 runtime
+ Built by spm into /usr/local/rdiff-backup, with its own Python 2, OpenSSL and
+ librsync, for backing up to servers still running rdiff-backup 1.x (1.x and
+ 2.x are wire-incompatible). Does not touch /usr/bin, so it coexists with the
+ distribution rdiff-backup package; source /usr/local/spm/local.env to put it
+ first on PATH.
+
