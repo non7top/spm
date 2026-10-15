@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=nghttp2
-ver="${ver:-1.35.1}"
+ver="${ver:-1.64.0}"
 rel=1
 grp=base
 dep=()
@@ -8,7 +8,7 @@ src=(http://ftp.gnu.org/gnu/libidn/libidn-${ver}.tar.gz)
 sha=(ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb)
 
 _build() {
-    curl -O -L  https://github.com/nghttp2/nghttp2/releases/download/v1.35.1/nghttp2-${ver}.tar.gz
+    curl -O -L  https://github.com/nghttp2/nghttp2/releases/download/v${ver}/nghttp2-${ver}.tar.gz
     tar xf ${pkg}-${ver}.tar.gz
     cd ${pkg}-${ver}
 
@@ -16,7 +16,7 @@ _build() {
     #ACLOCAL_FLAGS="-I /usr/share/aclocal/" \
     #    LIBS="-lreadline -lncurses" \
     #    PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
-    ./configure --silent --prefix=$SPM_PREFIX --enable-python-bindings=no
+    ./configure --silent --prefix=$SPM_PREFIX --enable-lib-only
     make -s install
 }
 
