@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=git
-ver="${ver:-2.46.0}"
+ver="${ver:-2.56.0}"
 rel=1
 grp=base
 dep=(openssl zlib ca-bundle expat gettext)
@@ -20,8 +20,8 @@ _build() {
         --with-openssl \
         --with-curl --with-expat
     # fking stupid git, couldn't find a way to disable gettext&locales
-    NO_GETTEXT=1 make NO_GETTEXT=YesPlease
-    make install
+    NO_GETTEXT=1 make NO_GETTEXT=YesPlease CSPRNG_METHOD=openssl NO_RUST=1
+    make install CSPRNG_METHOD=openssl NO_RUST=1
 }
 
 _list() {

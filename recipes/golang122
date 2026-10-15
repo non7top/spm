@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=golang122
-ver="${ver:-1.22.6}"
+ver="${ver:-1.22.12}"
 rel=1
 grp=base
 dep=(golang120)

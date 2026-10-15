@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=curl
-ver="${ver:-8.9.1}"
+ver="${ver:-8.23.0}"
 rel=1
 grp=base
 dep=(openssl zlib libidn2 ca-bundle nghttp2)
@@ -12,7 +12,7 @@ _build() {
     tar xzf $pkg-${ver}.tar.gz
     cd ${pkg}-${ver}
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig \
-        ./configure --prefix=$SPM_PREFIX --with-ca-bundle=$SPM_PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn2 --with-nghttp2 --enable-alt-svc
+        ./configure --prefix=$SPM_PREFIX --with-ca-bundle=$SPM_PREFIX/ssl/cert.pem --with-ssl --with-zlib --with-libidn2 --with-nghttp2 --enable-alt-svc --without-libpsl
     make -s
     make -s install
 }
