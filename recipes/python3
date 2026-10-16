@@ -13,6 +13,7 @@ _build() {
     tar xzf Python-$ver.tgz
     cd Python-$ver
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared --enable-loadable-sqlite-extensions
+    make build_all
     make -s install
     pip3 install -U pip
 }
