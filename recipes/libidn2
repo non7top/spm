@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=libidn2
-ver="${ver:-2.0.5}"
+ver="${ver:-2.3.8}"
 rel=1
 grp=base
 dep=()
