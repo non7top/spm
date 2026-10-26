@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=python2
-ver="${ver:-2.7.17}"
+ver="${ver:-2.7.18}"
 rel=1
 grp=base
 dep=(openssl zlib curl)

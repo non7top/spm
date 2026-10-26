@@ -1,6 +1,6 @@
 #!/bin/bash
 pkg=python3
-ver="${ver:-3.12.15}"
+ver="${ver:-3.15.0}"
 rel=1
 grp=base
 dep=(openssl zlib curl libffi sqlite3 bzip2)
@@ -12,6 +12,17 @@ _build() {
     curl -O https://www.python.org/ftp/python/$ver/Python-$ver.tgz
     tar xzf Python-$ver.tgz
     cd Python-$ver
+    # glibc < 2.16 lacks aligned_alloc, used by the bundled HACL
+    hdr=Modules/_hacl/include/krml/internal/target.h
+    if [ -f $hdr ]; then
+        cat > aligned_alloc_compat.h <<'EOT'
+#if defined(__GLIBC__) && (__GLIBC__ < 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 16))
+#  include <malloc.h>
+#  define aligned_alloc(alignment, size) memalign(alignment, size)
+#endif
+EOT
+        sed -i '/^#include <stdlib.h>/r aligned_alloc_compat.h' $hdr
+    fi
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared --enable-loadable-sqlite-extensions
     make -s install
     pip3 install -U pip
