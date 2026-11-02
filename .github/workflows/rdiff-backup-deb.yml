@@ -88,9 +88,9 @@ jobs:
 
       - name: Fetch and verify apt-cosign-sign
         id: apt-cosign-sign
-        uses: non7top/apt-cosign/.github/actions/fetch-apt-cosign-sign@v0.8.0
+        uses: non7top/apt-cosign/.github/actions/fetch-apt-cosign-sign@v0.8.1
         with:
-          version: '0.8.0'
+          version: '0.8.1'
           github-token: ${{ github.token }}
 
       - name: Sign the .deb
@@ -106,7 +106,7 @@ jobs:
           generate_release_notes: true
 
       - name: Stage, sign, and publish the apt repo
-        uses: non7top/apt-cosign/.github/actions/publish-apt-repo@v0.8.0
+        uses: non7top/apt-cosign/.github/actions/publish-apt-repo@v0.8.1
         with:
           sign-bin: ${{ steps.apt-cosign-sign.outputs.bin-path }}
           origin: spm
