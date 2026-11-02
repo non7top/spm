@@ -24,6 +24,7 @@ EOT
         sed -i '/^#include <stdlib.h>/r aligned_alloc_compat.h' $hdr
     fi
     PKG_CONFIG_PATH=$SPM_PREFIX/lib/pkgconfig ./configure --silent --prefix=$SPM_PREFIX --enable-shared --enable-loadable-sqlite-extensions
+    make build_all
     make -s install
     pip3 install -U pip
 }
